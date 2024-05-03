@@ -50,7 +50,7 @@ export class CreateUserController {
       });
     } catch (error) {
       console.log(error)
-      return httpResponse.status(400).json({
+      return httpResponse.status(500).json({
         error: error
       });
     }
