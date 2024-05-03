@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -66,35 +66,45 @@ model Pedido {
   status           Status    @default(PENDENTE)
   observacao       String    @db.Text
 
-  Usuario      Usuario?       @relation(fields: [usuarioId], references: [id])
-  usuarioId    String?
-  Itens_Pedido Itens_Pedido[]
+  usuarioId String?
+  Usuario   Usuario? @relation(fields: [usuarioId], references: [id])
+
+  itens_Pedido Itens_Pedido[]
+
+  unidadeFornecedoraId String?
+  unidadeRecebedoraId  String?
+
+  Fornecedor Unidade? @relation("FornecedorPedidos", fields: [unidadeFornecedoraId], references: [id])
+  Recebedor  Unidade? @relation("RecebedorPedidos", fields: [unidadeRecebedoraId], references: [id])
 }
 
 model Unidade {
-  id               String     @id @default(uuid())
-  nome             String     @db.VarChar(50)
-  descricao        String     @db.Text
-  data_Criacao     DateTime   @default(now())
-  data_Modificacao DateTime   @updatedAt
+  id               String   @id @default(uuid())
+  nome             String   @db.VarChar(50)
+  descricao        String   @db.Text
+  data_Criacao     DateTime @default(now())
+  data_Modificacao DateTime @updatedAt
   tipo             Tipo
-  endereco         Endereco?  @relation(fields: [endereco_Id], references: [id])
-  Empresa          Empresa?   @relation(fields: [empresa_Id], references: [id])
-  empresa_Id       String?
-  endereco_Id      String?
-  Producao         Producao[]
-  Venda            Venda[]
-  funcionarios     Usuario[]
+  enderecoId       String?
+  empresaId        String?
+
+  Endereco          Endereco?  @relation(fields: [enderecoId], references: [id])
+  Empresa           Empresa?   @relation(fields: [empresaId], references: [id])
+  Producao          Producao[]
+  Venda             Venda[]
+  funcionarios      Usuario[]
+  FornecedorPedidos Pedido[]   @relation("FornecedorPedidos")
+  RecebedorPedidos  Pedido[]   @relation("RecebedorPedidos")
 }
 
 model Endereco {
-  id         String    @id @default(uuid())
-  cep        String    @db.Char(9)
-  pais       String    @db.VarChar(50)
-  uf         String    @db.Char(2)
+  id         String @id @default(uuid())
+  cep        String @db.Char(9)
+  pais       String @db.VarChar(50)
+  uf         String @db.Char(2)
   cidade     String
-  logradouro String    @db.VarChar(100)
-  numero     String    @db.VarChar(50)
+  logradouro String @db.VarChar(100)
+  numero     String @db.VarChar(50)
   Unidade    Unidade[]
 }
 

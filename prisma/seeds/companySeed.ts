@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { cnpj, cnpj as cnpjValidator } from 'cpf-cnpj-validator';
+import { cnpj as cnpjValidator } from 'cpf-cnpj-validator';
 import { fakerPT_BR as faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
@@ -17,9 +17,9 @@ export async function seedCompany() {
   }   
 
   for (const companyData of companiesData) {
-    const user = await prisma.empresa.create({
+    const company = await prisma.empresa.create({
       data: companyData
     });
-    console.log(`Usuário criado: ${user.nome}`);
+    console.log(`Usuário criado: ${company.nome}`);
   }
 }
