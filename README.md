@@ -59,9 +59,9 @@ O sistema foi desenvolvido para automatizar e otimizar o fluxo de pedidos em uma
 Para instalar e configurar o sistema localmente, siga estes passos:
 
 ```bash
-`git clone https://seu-repositorio-aqui.git
+git clone https://seu-repositorio-aqui.git
 cd nome-do-projeto
-npm install` 
+npm install
 ```
 Configure o ambiente local criando um arquivo `.env` na raiz do projeto com as seguintes variáveis:
 
@@ -72,21 +72,17 @@ makefile
 Gere e aplique as migrações do Prisma:
 
 ```bash
-
-`npx prisma migrate dev` 
+npx prisma migrate dev
 ```
 Popule o banco de dados:
 
 ```bash
-
-`npm run seed` 
+npm run seed
 ```
 Inicie o servidor:
 
 ```bash
-
-
-`npm start` 
+npm start
 ```
 ## Uso
 
