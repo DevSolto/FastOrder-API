@@ -1,14 +1,98 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url  	    = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String  @id @default(uuid())
+  name     String  @db.VarChar(50)
+  cpf      String  @unique @db.Char(11)
+  email    String  @unique @db.VarChar(100)
+  password String  @db.Char(60)
+  phone    String  @unique @db.VarChar(20)
+  role     Role
+  orders   Order[]
+  Works    Works[]
+}
+
+enum Role {
+  ADMIN
+  SELLER
+  SUPPLIER // Fornecedor
+}
+
+model Order {
+  id           String    @id @default(uuid())
+  creationDate DateTime  @default(now())
+  receivedDate DateTime?
+  status       Status
+  product      Product[]
+
+  deliveryEstimate DateTime?
+  User             User?        @relation(fields: [userId], references: [id])
+  userId           String?
+  OrderItems       OrderItems[]
+}
+
+enum Status {
+  OPENED
+  CANCELLED
+  REFFUSED // Recusado
+  PRODUCING
+  ON_DELIVERY
+  DELIVERED
+  DELIVERED_ERROR
+}
+
+model Product {
+  id          String       @id @default(uuid())
+  name        String       @unique @db.VarChar(50)
+  description String
+  type        Type
+  order       Order[]
+  OrderItems  OrderItems[]
+}
+
+enum Type {
+  SWEET
+  SALTY
+}
+
+model OrderItems {
+  Order     Order?   @relation(fields: [orderId], references: [id])
+  orderId   String
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId String
+  observation String 
+  amount Int 
+
+  @@id([orderId, productId])
+}
+
+model Unit {
+  id          String   @id @default(uuid())
+  name        String   @unique @db.VarChar(50)
+  description String
+  type        UnitType
+  Works       Works[]
+}
+
+enum UnitType {
+  SUPPLIER
+  SELLER
+}
+
+model Works {
+  User   User?  @relation(fields: [userId], references: [id])
+  userId String
+  Unit   Unit?  @relation(fields: [unitId], references: [id])
+  unitId String
+  startingDate DateTime
+  endingDate DateTime
+  @@id([unitId, userId])
 }
