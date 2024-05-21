@@ -15,6 +15,30 @@ export class UserRepository {
         });
         return user; // Retorna o usuário encontrado ou null
     }
+    public async getByEmail(emailUser: string) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                email: emailUser // Condição de busca pelo email do usuário
+            }
+        });
+        return user; // Retorna o usuário encontrado ou null
+    }
+    public async getByCpf(cpfUser: string) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                cpf: cpfUser // Condição de busca pelo cpf do usuário
+            }
+        });
+        return user; // Retorna o usuário encontrado ou null
+    }
+    public async getByPhone(phoneUser: string) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                phone: phoneUser // Condição de busca pelo phone do usuário
+            }
+        });
+        return user; // Retorna o usuário encontrado ou null
+    }
 
     // Método para criar um novo usuário
     // Parâmetro: createUserParams - objeto contendo os dados do novo usuário (name, cpf, email, password, phone, role)

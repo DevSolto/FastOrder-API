@@ -1,6 +1,8 @@
 import { Role, User } from "@prisma/client"; // Importa os tipos Role e User do Prisma Client
 import { UserRepository } from "../repositories/userRepository"; // Importa o repositório de usuários
 import bcrypt from "bcrypt"; // Importa a biblioteca bcrypt para hash de senhas
+import { error } from "console";
+import { CpfBeingUsed, EmailBeingUsed, PhoneBeingUsed } from "../errors/userErro";
 
 // Classe que representa os casos de uso relacionados a usuários
 export class UserUseCase {
@@ -17,10 +19,30 @@ export class UserUseCase {
     // Método para criar um novo usuário
     // Parâmetro: createUserParams - objeto contendo os dados do novo usuário (name, cpf, email, password, phone, role)
     // Retorna: o usuário criado
-    async create(createUserParams: {name: string, cpf: string, email: string, password: string, phone: string, role: string}) {
-        // TODO: Verificar se existe algum usuário com este email
-        // TODO: Verificar se existe algum usuário com este cpf
-        // TODO: Verificar se existe algum usuário com este telefone
+    async create(createUserParams: 
+        {
+            name: string, 
+            cpf: string, 
+            email: string, 
+            password: string, 
+            phone: string, 
+            role: string
+        }
+    ) {
+        const userByEmail = await this.userRepository.getByEmail(createUserParams.email)
+        if(userByEmail != null){
+            throw new EmailBeingUsed(createUserParams.email)
+        }
+
+        const userByCpf = await this.userRepository.getByCpf(createUserParams.cpf)
+        if(userByCpf != null){
+            throw new CpfBeingUsed(createUserParams.cpf)
+        }
+        
+        const userByPhone = await this.userRepository.getByPhone(createUserParams.phone)
+        if(userByPhone != null){
+            throw new PhoneBeingUsed(createUserParams.phone)
+        }
 
         // Gera o hash da senha do usuário
         const hashedPassword = await bcrypt.hash(createUserParams.password, 10);

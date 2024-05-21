@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { UserUseCase } from '../useCases/userUseCase';
 import { IsEmail, IsNotEmpty, IsString, validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
+import { CpfBeingUsed, EmailBeingUsed, PhoneBeingUsed } from '../errors/userErro';
 
 // Controlador que lida com as requisições HTTP relacionadas a usuários
 export class UserController {
@@ -43,6 +44,14 @@ export class UserController {
       const user = await this.userUseCase.create(createUserDto); // Cria o usuário usando a classe de casos de uso
       res.status(201).json(user); // Retorna o usuário criado com status 201
     } catch (error) {
+
+      // TODO: ISTO ETÁ UMA MERDA
+      const isUserError = error instanceof EmailBeingUsed && error instanceof CpfBeingUsed && error instanceof PhoneBeingUsed
+
+      if(isUserError){
+        res.status(400).json(error);                                                                                                                                                                                                                                                                                                          
+        return 
+      }
       console.error('Error creating user:', error); // Log de erro no servidor
       res.status(500).json({ message: 'Internal server error' }); // Retorna erro 500 em caso de falha interna
     }
