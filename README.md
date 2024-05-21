@@ -58,3 +58,40 @@ O sistema foi desenvolvido para automatizar e otimizar o fluxo de pedidos em uma
     
     -   Envio de notificações para usuários sobre atualizações importantes em seus pedidos ou mudanças no status.
     -   Alertas para os gerentes sobre problemas potenciais, como atrasos na entrega ou baixos níveis de estoque.
+
+## Bibliotecas Utilizadas
+
+### `express`
+- **Descrição**: Express é um framework web minimalista para Node.js, que fornece um conjunto robusto de recursos para criar aplicações web e APIs.
+- **Uso no Projeto**: Utilizado para configurar o servidor web, definir rotas e middleware.
+- **Documentação**: [Express.js](https://expressjs.com/)
+
+### `@prisma/client`
+- **Descrição**: Prisma Client é um ORM (Object-Relational Mapping) que facilita a interação com o banco de dados. Ele é gerado automaticamente com base no schema definido no Prisma.
+- **Uso no Projeto**: Utilizado para realizar operações de banco de dados, como criação, leitura, atualização e exclusão de registros.
+- **Documentação**: [Prisma Client](https://www.prisma.io/docs/concepts/components/prisma-client)
+
+### `prisma`
+- **Descrição**: Prisma é um ORM moderno que ajuda na modelagem de dados, migração e consultas em bancos de dados.
+- **Uso no Projeto**: Utilizado para gerenciar o schema do banco de dados e gerar o cliente Prisma.
+- **Documentação**: [Prisma](https://www.prisma.io/)
+
+### `bcrypt`
+- **Descrição**: Bcrypt é uma biblioteca para hashing de senhas, oferecendo uma forma segura de armazenar senhas.
+- **Uso no Projeto**: Utilizado para hashear senhas antes de armazená-las no banco de dados.
+- **Documentação**: [bcrypt](https://github.com/kelektiv/node.bcrypt.js)
+
+### `class-validator`
+- **Descrição**: Class-validator é uma biblioteca para validação de classes em TypeScript e JavaScript.
+- **Uso no Projeto**: Utilizado para validar os dados das requisições antes de processá-los.
+- **Documentação**: [class-validator](https://github.com/typestack/class-validator)
+
+### `class-transformer`
+- **Descrição**: Class-transformer é uma biblioteca que transforma objetos em instâncias de classes e vice-versa, facilitando a manipulação de dados.
+- **Uso no Projeto**: Utilizado para transformar objetos JSON em instâncias de DTOs (Data Transfer Objects).
+- **Documentação**: [class-transformer](https://github.com/typestack/class-transformer)
+
+### `dotenv`
+- **Descrição**: Dotenv é uma biblioteca que carrega variáveis de ambiente a partir de um arquivo `.env` para `process.env`.
+- **Uso no Projeto**: Utilizado para gerenciar configurações e variáveis de ambiente de forma segura.
+- **Documentação**: [dotenv](https://github.com/motdotla/dotenv)

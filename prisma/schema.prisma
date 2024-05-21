@@ -1,98 +1,99 @@
-
 generator client {
   provider = "prisma-client-js"
+  // Configura o cliente Prisma para gerar código TypeScript/JavaScript
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // Configura a fonte de dados para usar PostgreSQL, com a URL do banco de dados sendo lida das variáveis de ambiente
 }
 
 model User {
-  id       String  @id @default(uuid())
-  name     String  @db.VarChar(50)
-  cpf      String  @unique @db.Char(11)
-  email    String  @unique @db.VarChar(100)
-  password String  @db.Char(60)
-  phone    String  @unique @db.VarChar(20)
-  role     Role
-  orders   Order[]
-  Works    Works[]
+  id       String  @id @default(uuid()) // Chave primária com valor padrão UUID
+  name     String  @db.VarChar(50) // Campo nome com tipo VarChar de tamanho 50
+  cpf      String  @unique @db.Char(11) // Campo CPF único com tipo Char de tamanho 11
+  email    String  @unique @db.VarChar(100) // Campo email único com tipo VarChar de tamanho 100
+  password String  @db.Char(60) // Campo senha com tipo Char de tamanho 60 (ideal para armazenar hash de senhas)
+  phone    String  @unique @db.VarChar(20) // Campo telefone único com tipo VarChar de tamanho 20
+  role     Role // Campo role que referencia o enum Role
+  orders   Order[] // Relacionamento um-para-muitos com o modelo Order
+  Works    Works[] // Relacionamento um-para-muitos com o modelo Works
 }
 
 enum Role {
-  ADMIN
-  SELLER
+  ADMIN // Administrador
+  SELLER // Vendedor
   SUPPLIER // Fornecedor
 }
 
 model Order {
-  id           String    @id @default(uuid())
-  creationDate DateTime  @default(now())
-  receivedDate DateTime?
-  status       Status
-  product      Product[]
-
-  deliveryEstimate DateTime?
-  User             User?        @relation(fields: [userId], references: [id])
-  userId           String?
-  OrderItems       OrderItems[]
+  id               String       @id @default(uuid()) // Chave primária com valor padrão UUID
+  creationDate     DateTime     @default(now()) // Data de criação com valor padrão agora
+  receivedDate     DateTime? // Data de recebimento opcional
+  status           Status // Campo status que referencia o enum Status
+  product          Product[] // Relacionamento muitos-para-muitos com o modelo Product
+  deliveryEstimate DateTime? // Data estimada de entrega opcional
+  User             User?        @relation(fields: [userId], references: [id]) // Relacionamento muitos-para-um com o modelo User
+  userId           String? // Campo userId opcional
+  OrderItems       OrderItems[] // Relacionamento um-para-muitos com o modelo OrderItems
 }
 
 enum Status {
-  OPENED
-  CANCELLED
+  OPENED // Aberto
+  CANCELLED // Cancelado
   REFFUSED // Recusado
-  PRODUCING
-  ON_DELIVERY
-  DELIVERED
-  DELIVERED_ERROR
+  PRODUCING // Em produção
+  ON_DELIVERY // Em entrega
+  DELIVERED // Entregue
+  DELIVERED_ERROR // Erro na entrega
 }
 
 model Product {
-  id          String       @id @default(uuid())
-  name        String       @unique @db.VarChar(50)
-  description String
-  type        Type
-  order       Order[]
-  OrderItems  OrderItems[]
+  id          String       @id @default(uuid()) // Chave primária com valor padrão UUID
+  name        String       @unique @db.VarChar(50) // Campo nome único com tipo VarChar de tamanho 50
+  description String // Campo descrição
+  type        Type // Campo type que referencia o enum Type
+  order       Order[] // Relacionamento muitos-para-muitos com o modelo Order
+  OrderItems  OrderItems[] // Relacionamento um-para-muitos com o modelo OrderItems
 }
 
 enum Type {
-  SWEET
-  SALTY
+  SWEET // Doce
+  SALTY // Salgado
 }
 
 model OrderItems {
-  Order     Order?   @relation(fields: [orderId], references: [id])
-  orderId   String
-  Product   Product? @relation(fields: [productId], references: [id])
-  productId String
-  observation String 
-  amount Int 
+  Order       Order?   @relation(fields: [orderId], references: [id]) // Relacionamento muitos-para-um com o modelo Order
+  orderId     String // Campo orderId
+  Product     Product? @relation(fields: [productId], references: [id]) // Relacionamento muitos-para-um com o modelo Product
+  productId   String // Campo productId
+  observation String // Campo observação
+  amount      Int // Campo quantidade
 
-  @@id([orderId, productId])
+  @@id([orderId, productId]) // Chave primária composta por orderId e productId
 }
 
 model Unit {
-  id          String   @id @default(uuid())
-  name        String   @unique @db.VarChar(50)
-  description String
-  type        UnitType
-  Works       Works[]
+  id          String   @id @default(uuid()) // Chave primária com valor padrão UUID
+  name        String   @unique @db.VarChar(50) // Campo nome único com tipo VarChar de tamanho 50
+  description String // Campo descrição
+  type        UnitType // Campo type que referencia o enum UnitType
+  Works       Works[] // Relacionamento um-para-muitos com o modelo Works
 }
 
 enum UnitType {
-  SUPPLIER
-  SELLER
+  SUPPLIER // Fornecedor
+  SELLER // Vendedor
 }
 
 model Works {
-  User   User?  @relation(fields: [userId], references: [id])
-  userId String
-  Unit   Unit?  @relation(fields: [unitId], references: [id])
-  unitId String
-  startingDate DateTime
-  endingDate DateTime
-  @@id([unitId, userId])
+  User         User?    @relation(fields: [userId], references: [id]) // Relacionamento muitos-para-um com o modelo User
+  userId       String // Campo userId
+  Unit         Unit?    @relation(fields: [unitId], references: [id]) // Relacionamento muitos-para-um com o modelo Unit
+  unitId       String // Campo unitId
+  startingDate DateTime // Data de início
+  endingDate   DateTime // Data de término
+
+  @@id([unitId, userId]) // Chave primária composta por unitId e userId
 }
