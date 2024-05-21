@@ -69,3 +69,4 @@ export class UserRepository {
         })
         return userDeleted
     }
+}
