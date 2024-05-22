@@ -4,9 +4,6 @@ import { PrismaClient, Role } from "@prisma/client";
 export class UserRepository {
     prisma = new PrismaClient() // Instância do Prisma Client para interagir com o banco de dados
 
-    // Método para buscar um usuário por ID
-    // Parâmetro: idUser - o ID do usuário a ser buscado
-    // Retorna: o usuário encontrado ou null se não encontrado
     public async getById(idUser: string) {
         const user = await this.prisma.user.findUnique({
             where: {
@@ -15,6 +12,7 @@ export class UserRepository {
         });
         return user; // Retorna o usuário encontrado ou null
     }
+
     public async getByEmail(emailUser: string) {
         const user = await this.prisma.user.findUnique({
             where: {
@@ -23,6 +21,7 @@ export class UserRepository {
         });
         return user; // Retorna o usuário encontrado ou null
     }
+
     public async getByCpf(cpfUser: string) {
         const user = await this.prisma.user.findUnique({
             where: {
@@ -31,6 +30,7 @@ export class UserRepository {
         });
         return user; // Retorna o usuário encontrado ou null
     }
+
     public async getByPhone(phoneUser: string) {
         const user = await this.prisma.user.findUnique({
             where: {
@@ -40,9 +40,6 @@ export class UserRepository {
         return user; // Retorna o usuário encontrado ou null
     }
 
-    // Método para criar um novo usuário
-    // Parâmetro: createUserParams - objeto contendo os dados do novo usuário (name, cpf, email, password, phone, role)
-    // Retorna: o usuário criado
     public async create(createUserParams: 
         { 
             name: string, 

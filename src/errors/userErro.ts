@@ -1,7 +1,7 @@
 export class EmailBeingUsed extends Error{
     constructor(email:string){
         super(`The email ${email} is already in use.`)
-        this.name = "EmailAlreadyInUseError"
+        this.name = "Email Already InUseError"
     }
 }
 export class CpfBeingUsed extends Error{
@@ -14,5 +14,11 @@ export class PhoneBeingUsed extends Error{
     constructor(phone:string){
         super(`The phone ${phone} is already in use.`)
         this.name = "PhoneAlreadyInUseError"
+    }
+}
+export class UserNotFound extends Error{
+    constructor(){
+        super(`User not found`)
+        this.name = "UserNotFound"
     }
 }
