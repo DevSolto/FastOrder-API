@@ -28,15 +28,16 @@ enum Role {
 }
 
 model Order {
-  id               String       @id @default(uuid()) // Chave primária com valor padrão UUID
-  creationDate     DateTime     @default(now()) // Data de criação com valor padrão agora
+  id               String          @id @default(uuid()) // Chave primária com valor padrão UUID
+  creationDate     DateTime        @default(now()) // Data de criação com valor padrão agora
   receivedDate     DateTime? // Data de recebimento opcional
-  status           Status // Campo status que referencia o enum Status
+  status           Status          @default(OPENED) // Campo status que referencia o enum Status
   product          Product[] // Relacionamento muitos-para-muitos com o modelo Product
   deliveryEstimate DateTime? // Data estimada de entrega opcional
-  User             User?        @relation(fields: [userId], references: [id]) // Relacionamento muitos-para-um com o modelo User
+  User             User?           @relation(fields: [userId], references: [id]) // Relacionamento muitos-para-um com o modelo User
   userId           String? // Campo userId opcional
   OrderItems       OrderItems[] // Relacionamento um-para-muitos com o modelo OrderItems
+  OrdersUnities    OrdersUnities[]
 }
 
 enum Status {
@@ -75,11 +76,12 @@ model OrderItems {
 }
 
 model Unit {
-  id          String   @id @default(uuid()) // Chave primária com valor padrão UUID
-  name        String   @unique @db.VarChar(50) // Campo nome único com tipo VarChar de tamanho 50
-  description String // Campo descrição
-  type        UnitType // Campo type que referencia o enum UnitType
-  Works       Works[] // Relacionamento um-para-muitos com o modelo Works
+  id            String          @id @default(uuid()) // Chave primária com valor padrão UUID
+  name          String          @unique @db.VarChar(50) // Campo nome único com tipo VarChar de tamanho 50
+  description   String // Campo descrição
+  type          UnitType // Campo type que referencia o enum UnitType
+  Works         Works[] // Relacionamento um-para-muitos com o modelo Works
+  OrdersUnities OrdersUnities[]
 }
 
 enum UnitType {
@@ -96,4 +98,14 @@ model Works {
   endingDate   DateTime // Data de término
 
   @@id([unitId, userId]) // Chave primária composta por unitId e userId
+}
+
+model OrdersUnities {
+  Order   Order?   @relation(fields: [orderId], references: [id])
+  orderId String 
+  Unit    Unit?    @relation(fields: [unitId], references: [id])
+  unitId  String 
+  type    UnitType
+
+  @@id([unitId, orderId])
 }

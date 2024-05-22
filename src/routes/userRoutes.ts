@@ -12,7 +12,7 @@ router.get('', async(req, res)=>{
   return await userController.getAll(res)
 })
 
-router.post('/', async (req, res) => {
+router.post('', async (req, res) => {
   return await userController.create(req, res)
 })
 
