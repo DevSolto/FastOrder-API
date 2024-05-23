@@ -37,7 +37,11 @@ const productDescriptionSchema = z
     .min(1, error_messages.empty_field)
 
 /* Schema de validação para o campo Type de Produto */
-const productTypeSchema = z.string()
+const productTypeSchema = z.enum(['SALTY', 'SWEET'], {
+    required_error: error_messages.required_field_in_json,
+    message: "Valor não permitido"
+    /* Personalizar as mensagens */
+})
 
 
 /* Schema de validação para a criação de um Produto */

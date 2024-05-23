@@ -1,143 +1,214 @@
 import { ProductUseCase } from "../useCases/productUseCase"
 import { Request, Response } from "express"
 import validator from "validator"
-import { createProductSchema } from "../schemas/productSchemas"
+import { createProductSchema, updateProductSchema } from "../schemas/productSchemas"
+import { RequestHttpResponse } from "../types"
 
 export class ProductController {
     productUseCase = new ProductUseCase()
     
     /* Chamar a função em um FIlter de getAllProducts */
-    async getByName(req: Request, res: Response) {}
+    //async getByName(req: Request, res: Response) {}
 
     async getById(req: Request, res: Response) {
         const productId = req.params.id
 
+        const httpResponse: RequestHttpResponse = {
+            status: 200,
+            success: true,
+            message: "Lista de Produtos"
+        }
+
         const isUuid = validator.isUUID(productId) // Mudar Pro Zod????
 
-        if (!isUuid) 
-            res.status(400).json({
-              message: `The id ${productId} is not valid.`
-            })
+        if (!isUuid) {
+            httpResponse.status - 400
+            httpResponse.success = false
+            httpResponse.message = `The id ${productId} is not valid.`
+            
+            return res.status(httpResponse.status).json(httpResponse)
+        }
 
         try {
             const product = await this.productUseCase.getById(productId)
 
-            if(!product) // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
-                res.status(404).json({
-                    message: 'Product Not Found'
-                })
+            if(!product) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
+                httpResponse.status = 404
+                httpResponse.success = false
+                httpResponse.message =  'Product Not Found'
 
-            res.status(200).json(product)
+                return res.status(httpResponse.status).json(httpResponse)
+            }    
+
+           return res.status(httpResponse.status).json(product)
 
         } catch (error) {
             console.error('Error fetching product by ID:', error);
+
+            httpResponse.status = 500
+            httpResponse.success = false
+            httpResponse.message = 'Internal server error'
             
-            res.status(500).json({
-              message: 'Internal server error'
-            }); 
+           return  res.status(httpResponse.status).json(httpResponse); 
         }
     }
 
     async getAllProducts(req: Request, res: Response) {
+        const httpResponse: RequestHttpResponse = {
+            status: 200,
+            success: true,
+            message: "Lista de Produtos"
+        }
+
+        /* Adicionar FIltro, Ordenação e Paginação */
+
         try {
-            const products = this.productUseCase.getAllProduct()
+            const products = await this.productUseCase.getAllProduct()
 
-            //Como tratar array vazio
-
-            res.status(200).json(products)
+            httpResponse.data = products
+            
+            return res.status(httpResponse.status).json(httpResponse)
 
         } catch (error) {
             console.error('Error fetching all product by ID:', error);
             
-            res.status(500).json({
-              message: 'Internal server error'
-            }); 
+            httpResponse.status = 500
+            httpResponse.success = false
+            httpResponse.message = 'Internal server error'
+            
+           return  res.status(httpResponse.status).json(httpResponse); 
         }
     }
 
     async create(req: Request, res: Response) {
-        const request_body_validation = createProductSchema.safeParse(req.body)
+        const request_body_validation = await createProductSchema.safeParseAsync(req.body)
 
-        if(!request_body_validation.success)
-            res.status(200).json({
-                errors: request_body_validation.error.formErrors
-            })
+        const httpResponse: RequestHttpResponse = {
+            status: 200,
+            success: true,
+            message: "Produto Criado com Sucesso"
+        }
 
-/*         const { name, description, type } = request_body_validation.data
- */
+        if(!request_body_validation.success){
+            httpResponse.status = 400
+            httpResponse.success = false
+            httpResponse.message = "Não foi possivel criar o produto, verifique os valores dos campos"
+            httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
+            
+            return res.status(httpResponse.status).json(httpResponse)
+        }
+
         try {
-            const product = await this.productUseCase.create(req.body)
+            const product = await this.productUseCase.create(request_body_validation.data)
 
             res.status(201).json(product)
         } catch (error) {
             console.error('Error creating a product:', error);
             
-            res.status(500).json({
-              message: 'Internal server error'
-            }); 
+            httpResponse.status = 500
+            httpResponse.success = false
+            httpResponse.message = 'Internal server error'
+            
+           return  res.status(httpResponse.status).json(httpResponse); 
         }
     }
 
     async updateById(req: Request, res: Response) {
         const productId = req.params.id
-        const requestBody = req.body
+
+        const httpResponse: RequestHttpResponse = {
+            status: 200,
+            success: true,
+            message: "Produto Atualizado com Sucesso"
+        }
 
         const isUuid = validator.isUUID(productId) // Mudar Pro Zod????
+        const request_body_validation = await updateProductSchema.safeParseAsync(req.body)
 
-        if (!isUuid) 
-            res.status(400).json({
-              message: `The id ${productId} is not valid.`
-            })
+        if (!isUuid) {
+            httpResponse.status = 400
+            httpResponse.success = false
+            httpResponse.message = `The id ${productId} is not valid.`
+            
+            return res.status(httpResponse.status).json(httpResponse)
+        }
 
+        if(!request_body_validation.success){
+            httpResponse.status = 400
+            httpResponse.success = false
+            httpResponse.message = "Não foi possivel atualizar o produto, verifique os valores dos campos"
+            httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
+            
+            return res.status(httpResponse.status).json(httpResponse)
+        }
         try {
             const productExist = await this.productUseCase.getById(productId)
 
-            if(!productExist) // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
-                res.status(404).json({
-                    message: 'Product Not Found'
-                })
-            
-            /* Trato os inputs */
+            if(!productExist) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
+                httpResponse.status = 404
+                httpResponse.success = false
+                httpResponse.message =  'Product Not Found'
 
-            const product = await this.productUseCase.updateById(productId, requestBody)
+                return res.status(httpResponse.status).json(httpResponse)
+            }    
             
+            const product = await this.productUseCase.updateById(productId, request_body_validation.data)
+            
+            
+            return res.status(httpResponse.status).json(httpResponse)
         } catch (error) {
             console.error('Error deleting a product:', error);
             
-            res.status(500).json({
-              message: 'Internal server error'
-            }); 
+            httpResponse.status = 500
+            httpResponse.success = false
+            httpResponse.message = 'Internal server error'
+            
+           return  res.status(httpResponse.status).json(httpResponse); 
         }
     }
     
     async deleteById(req: Request, res: Response) {
         const productId = req.params.id
         
+        const httpResponse: RequestHttpResponse = {
+            status: 200,
+            success: true,
+            message: 'Product Deleted Succefully'
+        }
+
         const isUuid = validator.isUUID(productId) // Mudar Pro Zod????
 
-        if (!isUuid) 
-            res.status(400).json({
-              message: `The id ${productId} is not valid.`
-            })
-
+        if (!isUuid) {
+            httpResponse.status = 400
+            httpResponse.success = false
+            httpResponse.message = `The id ${productId} is not valid.`
+            
+            return res.status(httpResponse.status).json(httpResponse)
+        }
 
         try {
             const productExist = await this.productUseCase.getById(productId)
 
-            if(!productExist) // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
-                res.status(404).json({
-                    message: 'Product Not Found'
-                })
+            if(!productExist) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
+                httpResponse.status = 404
+                httpResponse.success = false
+                httpResponse.message =  'Product Not Found'
+
+                return res.status(httpResponse.status).json(httpResponse)
+            }    
             
             const product = await this.productUseCase.deleteById(productId)
 
-            res.status(200).json({ message: 'Product Deleted Succefully' })
+
+            return res.status(httpResponse.status).json(httpResponse)
         } catch (error) {
             console.error('Error deleting a product:', error);
             
-            res.status(500).json({
-              message: 'Internal server error'
-            }); 
+            httpResponse.status = 500
+            httpResponse.success = false
+            httpResponse.message = 'Internal server error'
+            
+           return  res.status(httpResponse.status).json(httpResponse); 
         }
     }
     

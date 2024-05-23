@@ -21,7 +21,7 @@ export class ProductRepository {
         return product
     }
 
-    public async getAllProducts() {
+    public getAllProducts = async () => {
         const products = await this.prisma.product.findMany()
 
         return products

@@ -17,7 +17,7 @@ export class ProductUseCase {
         return product
     }
 
-    async getAllProduct() {
+    getAllProduct = async () => {
         const products = await this.productRepository.getAllProducts()
 
         return products

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { ProductController } from "../controllers/productController";
-
+import { PrismaClient } from "@prisma/client";
 const router = Router()
 const productControler = new ProductController()
 
@@ -20,7 +20,7 @@ router.put("/:id", async (req, res) => {
     return await productControler.updateById(req, res)
 })
 
-router.delete("", async (req, res) => {
+router.delete("/:id", async (req, res) => {
     return await productControler.deleteById(req, res)
 })
 
