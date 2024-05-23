@@ -1,5 +1,5 @@
 // Importando Banco de dados
-import { PrismaClient, Role, Type } from "@prisma/client";
+import { PrismaClient, Type } from "@prisma/client";
 
 // Tornando a classe visível 
 export class productsRepositories{

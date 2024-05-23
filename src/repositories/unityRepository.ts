@@ -67,5 +67,7 @@ export class UnitRepository{
                 id:unitId
             }
         })
+
+        return unit
     }
 }

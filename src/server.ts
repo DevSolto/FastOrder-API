@@ -1,13 +1,15 @@
-import express from 'express'; // Importa o framework Express
-import userRoutes from './routes/userRoutes'; // Importa as rotas de usuário definidas em outro arquivo
+import express from 'express'
+import userRoutes from './routes/userRoutes'
+import unitRoutes from './routes/unitRoutes'
 
-const app = express(); // Cria uma instância da aplicação Express
-const port = process.env.PORT || 3000; // Define a porta do servidor, utilizando a variável de ambiente PORT ou 3000 como padrão
+const app = express()
 
-app.use(express.json()); // Middleware que permite o Express interpretar JSON no corpo das requisições
-app.use('/api/users', userRoutes); // Define o prefixo '/api/users' para todas as rotas de usuário
+const port = process.env.PORT || 3000
 
-// Inicia o servidor na porta definida
+app.use(express.json())
+app.use('/api/users', userRoutes)
+app.use('/api/unities', unitRoutes)
+
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`); // Loga no console a mensagem de que o servidor está rodando e a porta utilizada
-});
+  console.log(`Server is running on port ${port}`)
+})
