@@ -1,8 +1,7 @@
 import { PrismaClient, Role } from "@prisma/client";
 
-// Classe que representa o repositório de usuários, responsável por interagir com o banco de dados
 export class UserRepository {
-    prisma = new PrismaClient() // Instância do Prisma Client para interagir com o banco de dados
+    prisma = new PrismaClient()
 
     public async getById(idUser: string) {
         const user = await this.prisma.user.findUnique({
