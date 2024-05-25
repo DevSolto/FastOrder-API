@@ -64,3 +64,17 @@ export type updateOrderParams = {
     deliveryEstimate?: Date,
     userId?: string
 }
+
+export type createOrderItemsParams = {
+    productId: string,
+    orderId: string,
+    observation: string,
+    amount:number
+}
+
+export type updateOrderItemsParams = {
+    productId?: string,
+    orderId?: string,
+    observation?: string,
+    amount?:number
+}
