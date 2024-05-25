@@ -1,6 +1,5 @@
 import { IsNotEmpty, IsString, validate } from "class-validator";
 import { UnitUseCase } from "../useCases/unitUseCase";
-
 import { createUnitParams } from "../types";
 import { Request, Response } from "express"
 import validator from "validator"

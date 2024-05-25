@@ -9,15 +9,11 @@ import worksRoutes from './routes/workRoutes';
 const app = express()
 
 const port = process.env.PORT || 3000
-app.use(express.json())
 
-app.use('/api/users', userRoutes); // Define o prefixo '/api/users' para todas as rotas de usuário
+app.use(express.json())
+app.use('/api/users', [worksRoutes, userRoutes]); // Define o prefixo '/api/users' para todas as rotas de usuário
 app.use('/api/products', productRoutes); // Define o prefixo '/api/users' para todas as rotas de usuário
 app.use('/api/units', unitRoutes); // Define o prefixo '/api/users' para todas as rotas de usuário
-
-app.use('/api/works', worksRoutes)
-
-
 
 
 app.listen(port, () => {

@@ -14,33 +14,82 @@ export class WorksRepository {
     }
 
     public getAllWorks = async () => {
-        const works = await this.prisma.works.findMany()
+        const works = await this.prisma.works.findMany({
+            select: {
+                Unit: {
+                    select: {
+                        id: true,
+                        name: true,
+                        type: true
+                    }
+                },
+                User: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        role: true
+                    }
+                },
+                startingDate: true,
+                endingDate: true,
+            }
+        })
 
         return works
     }
 
-    public async getById(userId: string, unitId: string, options?: {
-        include?: Prisma.WorksInclude ,
-        select?: Prisma.WorksSelect
-    }) {
+    public async getWorksByUserId(userId: string) {
+        const user_works = await this.prisma.works.findMany({
+            where: {userId},
+            select: {
+                Unit: {
+                    select: {
+                        id: true,
+                        name: true,
+                        type: true
+                    }
+                },
+                User: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        role: true
+                    }
+                },
+                startingDate: true,
+                endingDate: true,
+            }
+        })
 
-        const workFindUniqueArgs: Prisma.WorksFindUniqueArgs = {
+        return user_works
+    }
+
+    public async getById(userId: string, unitId: string) {
+        const work = await this.prisma.works.findUnique({
             where: {
-                unitId_userId: {
-                    unitId,
-                    userId
-                }
+                unitId_userId: {userId, unitId}
             },
-        }
+            select: {
+                Unit: {
+                    select: {
+                        id: true,
+                        name: true,
+                        type: true,
+                    }
+                },
+                User: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        role: true
+                    }
+                },
+            }
 
-        if(options?.include)
-            workFindUniqueArgs.include = options.include
-        
-        if(options?.select)
-            workFindUniqueArgs.select = options.select
-        
-
-        const work = await this.prisma.works.findUnique(workFindUniqueArgs)
+        })
 
         return work
     }
