@@ -1,14 +1,12 @@
-import { PrismaClient, UnitType } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import { createUnitParams, updateUnitParams } from "../types";
 
 export class UnitRepository{
 
     // Método para criar unidade 
     prisma = new PrismaClient
-    async create(createUnitParams:{
-        name: string,
-        description: string,
-        type: UnitType
-    }) {
+
+    async create(createUnitParams: createUnitParams) {
         const unit = await this.prisma.unit.create({
             data:createUnitParams
         })
@@ -16,56 +14,41 @@ export class UnitRepository{
         return unit
     }
 
-    // Método para buscar unidade pelo nome 
-
-    async getByName(unitName:string){
+    async getByName(unitName: string) {
         const unit = await this.prisma.unit.findUnique({
-            where:{
-                name:unitName
-            }
+            where: {name: unitName}
         })
-        return unit;
-    }
-    // Método para buscar todas as unidades 
-    async getAllUnits(){
-        const units = await this.prisma.unit.findMany();
-        return units;
-    }
-    
-    // Método para encontrar unidade pelo Id 
 
-    async getById(unitId:string){
+        return unit
+    }
+
+    async getById(unitId: string) {
         const unit = await this.prisma.unit.findUnique({
-            where:{
-                id:unitId
-            }
+            where: {id: unitId}
         })
-        return unit;
+
+        return unit
     }
 
-    // Método para atualizar unidade pelo id
+    async getAllUnits() {
+        const unit = await this.prisma.unit.findMany()
 
-    async updateById(unitId:string, unitParams:{
-        name:string 
-        description:string
-        type:UnitType;
-    }){
+        return unit 
+    }
+
+    async updateById(unitId: string, updateUnitParams: updateUnitParams) {
         const unit = await this.prisma.unit.update({
-            where:{
-                id:unitId
-            },
-            data:unitParams
+            where: {id: unitId},
+            data: updateUnitParams
         })
-        return unit;
+
+        return unit
     }
 
-    //Método para excluir uma unidade pelo Id  
-
-    async deleteById(unitId:string){
+    async deleteById(unitId: string) {
         const unit = await this.prisma.unit.delete({
-            where:{
-                id:unitId
-            }
+            where: {id: unitId}
+
         })
 
         return unit
