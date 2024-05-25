@@ -33,3 +33,19 @@ export type updateUnitParams = {
     type?: UnitType
 }
 
+/* Works */
+export type createWorksParams = {
+    userId: string,
+    unitId: string,
+    startingDate: Date,
+    endingDate: Date,
+}
+
+export type updateWorksParams = {
+    userId?: string,
+    unitId?: string,
+    startingDate?: Date,
+    endingDate?: Date,
+}
+
+
