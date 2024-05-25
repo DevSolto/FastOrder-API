@@ -1,82 +1,72 @@
-import { IsNotEmpty, IsString, validate } from "class-validator";
-import { UnitUseCase } from "../useCases/unitUseCase";
-import { createUnitParams } from "../types";
-import { Request, Response } from "express"
+import {OrderUseCase} from "../useCases/orderUseCase"
+import {Request, Response} from "express"
+import {RequestHttpResponse} from "../types"
 import validator from "validator"
-import { RequestHttpResponse } from "../types"
-import { createUnitSchema, updateUnitSchema } from "../schemas/unitSchemas";
+import { createOrderSchema, updateOrderSchema } from "../schemas/orderSchemas"
 
-
-export class UnitController {
-    unitUseCase = new UnitUseCase()
-
+export class OrderController {
+    orderUseCase = new OrderUseCase()
 
     async getById(req: Request, res: Response) {
-        const unitId = req.params.id
+        const {orderId} = req.params
 
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Lista de Unidades"
+            message: "Detalhes do Pedidos"
         }
 
-        const isUuid = validator.isUUID(unitId)
+        const isUuid = validator.isUUID(orderId) // Mudar Pro Zod????
 
         if (!isUuid) {
             httpResponse.status - 400
             httpResponse.success = false
-            httpResponse.message = `The id ${unitId} is not valid.`
+            httpResponse.message = `The id ${orderId} is not valid.`
             
             return res.status(httpResponse.status).json(httpResponse)
         }
 
         try {
-            const unit = await this.unitUseCase.getById(unitId)
+            const order = await this.orderUseCase.getById(orderId)
 
-            if(!unit) { // VERIFICA
+            if(!order) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
                 httpResponse.status = 404
                 httpResponse.success = false
-                httpResponse.message =  'unit Not Found'
+                httpResponse.message =  'order Not Found'
 
                 return res.status(httpResponse.status).json(httpResponse)
             }    
 
-            httpResponse.data = unit
-
-           return res.status(httpResponse.status).json(httpResponse)
+           return res.status(httpResponse.status).json(order)
 
         } catch (error) {
-            console.error('Error fetching unit by ID:', error);
+            console.error('Error fetching order by ID:', error);
 
             httpResponse.status = 500
             httpResponse.success = false
             httpResponse.message = 'Internal server error'
             
            return  res.status(httpResponse.status).json(httpResponse); 
-
         }
     }
 
-
-    async getAllUnits(req: Request, res: Response) {
+    async getAll(req: Request, res: Response) {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Lista de Unidades"
+            message: "Lista de Pedidos"
         }
 
-
-
         try {
-            const units = await this.unitUseCase.getAllUnits()
+            const orders = await this.orderUseCase.getAll()
 
-            httpResponse.data = units
-            
+            httpResponse.data = orders
+
             return res.status(httpResponse.status).json(httpResponse)
 
         } catch (error) {
-            console.error('Error fetching all units:', error);
-            
+            console.error('Error fetching order by ID:', error);
+
             httpResponse.status = 500
             httpResponse.success = false
             httpResponse.message = 'Internal server error'
@@ -85,30 +75,30 @@ export class UnitController {
         }
     }
 
-    async create(req: Request, res: Response){
-        const request_body_validation = await createUnitSchema.safeParseAsync(req.body)
+    async create(req: Request, res: Response) {
+        const request_body_validation = await createOrderSchema.safeParseAsync(req.body)
 
         const httpResponse: RequestHttpResponse = {
-            status: 200,
+            status: 201,
             success: true,
-            message: "Unidade Criada com Sucesso"
+            message: "Produto Criado com Sucesso"
         }
 
         if(!request_body_validation.success){
             httpResponse.status = 400
             httpResponse.success = false
-            httpResponse.message = "Não foi possivel criar a unidade, verifique os valores dos campos"
+            httpResponse.message = "Não foi possivel criar o pedido, verifique os valores dos campos"
             httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
             
             return res.status(httpResponse.status).json(httpResponse)
         }
 
         try {
-            const unit = await this.unitUseCase.create(request_body_validation.data)
+            const order = await this.orderUseCase.create(request_body_validation.data)
 
-            res.status(201).json(unit)
+            res.status(httpResponse.status).json(httpResponse)
         } catch (error) {
-            console.error('Error creating a unit:', error);
+            console.error('Error creating a order:', error);
             
             httpResponse.status = 500
             httpResponse.success = false
@@ -119,21 +109,21 @@ export class UnitController {
     }
 
     async updateById(req: Request, res: Response) {
-        const unitId = req.params.id
+        const {orderId} = req.params
 
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Unidade Atualizado com Sucesso"
+            message: "Produto Atualizado com Sucesso"
         }
 
-        const isUuid = validator.isUUID(unitId) 
-        const request_body_validation = await updateUnitSchema.safeParseAsync(req.body)
+        const isUuid = validator.isUUID(orderId) // Mudar Pro Zod????
+        const request_body_validation = await updateOrderSchema.safeParseAsync(req.body)
 
         if (!isUuid) {
             httpResponse.status = 400
             httpResponse.success = false
-            httpResponse.message = `The id ${unitId} is not valid.`
+            httpResponse.message = `The id ${orderId} is not valid.`
             
             return res.status(httpResponse.status).json(httpResponse)
         }
@@ -141,28 +131,28 @@ export class UnitController {
         if(!request_body_validation.success){
             httpResponse.status = 400
             httpResponse.success = false
-            httpResponse.message = "Não foi possivel atualizar a unidade, verifique os valores dos campos"
+            httpResponse.message = "Não foi possivel atualizar o produto, verifique os valores dos campos"
             httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
             
             return res.status(httpResponse.status).json(httpResponse)
         }
-
         try {
-            const unitExist = await this.unitUseCase.getById(unitId)
+            const orderExist = await this.orderUseCase.getById(orderId)
 
-            if(!unitExist) { // VERIFICA
+            if(!orderExist) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
                 httpResponse.status = 404
                 httpResponse.success = false
-                httpResponse.message =  'Unit Not Found'
+                httpResponse.message =  'Order Not Found'
 
                 return res.status(httpResponse.status).json(httpResponse)
             }    
             
-            const unit = await this.unitUseCase.updateById(unitId, request_body_validation.data)
+            const order = await this.orderUseCase.updateById(orderId, request_body_validation.data)
+            
             
             return res.status(httpResponse.status).json(httpResponse)
         } catch (error) {
-            console.error('Error updating a unit:', error);
+            console.error('Error updating a order:', error);
             
             httpResponse.status = 500
             httpResponse.success = false
@@ -171,43 +161,43 @@ export class UnitController {
            return  res.status(httpResponse.status).json(httpResponse); 
         }
     }
-    
+
     async deleteById(req: Request, res: Response) {
-        const unitId = req.params.id
+        const {orderId} = req.params
         
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: 'unit Deleted Succefully'
+            message: 'order Deleted Succefully'
         }
 
-        const isUuid = validator.isUUID(unitId) 
+        const isUuid = validator.isUUID(orderId) // Mudar Pro Zod????
 
         if (!isUuid) {
             httpResponse.status = 400
             httpResponse.success = false
-            httpResponse.message = `The id ${unitId} is not valid.`
+            httpResponse.message = `The id ${orderId} is not valid.`
             
             return res.status(httpResponse.status).json(httpResponse)
         }
 
         try {
-            const unitExist = await this.unitUseCase.getById(unitId)
+            const orderExist = await this.orderUseCase.getById(orderId)
 
-            if(!unitExist) { //VERIFICA
+            if(!orderExist) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
                 httpResponse.status = 404
                 httpResponse.success = false
-                httpResponse.message =  'unit Not Found'
+                httpResponse.message =  'order Not Found'
 
                 return res.status(httpResponse.status).json(httpResponse)
             }    
             
-            const unit = await this.unitUseCase.deleteById(unitId)
+            const order = await this.orderUseCase.deleteById(orderId)
 
 
             return res.status(httpResponse.status).json(httpResponse)
         } catch (error) {
-            console.error('Error deleting a unit:', error);
+            console.error('Error deleting a order:', error);
             
             httpResponse.status = 500
             httpResponse.success = false

@@ -1,4 +1,4 @@
-import { Type, UnitType } from "@prisma/client";
+import { Type, UnitType, Status } from "@prisma/client";
 
 export interface RequestHttpResponse {
     status: number,
@@ -48,4 +48,19 @@ export type updateWorksParams = {
     endingDate?: Date,
 }
 
+/* Order */
+export type createOrderParams = {
+    creationDate?: Date,
+    receivedDate: Date,
+    status?: Status,
+    deliveryEstimate: Date,
+    userId: string
+}
 
+export type updateOrderParams = {
+    creationDate?: Date,
+    receivedDate?: Date,
+    status?: Status,
+    deliveryEstimate?: Date,
+    userId?: string
+}

@@ -1,16 +1,12 @@
 import { WorksRepository } from "../repositories/workRepository"
 import { createWorksParams, updateWorksParams } from "../types"
 import { WorkIAlreadyExists, WorkNotFound } from "../errors/workErro"
-import {Prisma} from "@prisma/client"
 
 export class WorkUseCase {
     workRepository = new WorksRepository
 
-    async getById(userId: string, unitId: string, options?: {
-        include?: Prisma.WorksInclude ,
-        select?: Prisma.WorksSelect
-    }) {
-        const work = await this.workRepository.getById(userId, unitId, options)
+    async getById(userId: string, unitId: string) {
+        const work = await this.workRepository.getById(userId, unitId)
 
         return work
     }
@@ -19,6 +15,12 @@ export class WorkUseCase {
         const works = await this.workRepository.getAllWorks()
 
         return works
+    }
+
+    async getWorksByUserId(userId: string) {
+        const user_works = await this.workRepository.getWorksByUserId(userId)
+
+        return user_works
     }
 
     async create(createworkParams: createWorksParams) {

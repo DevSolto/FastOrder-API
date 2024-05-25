@@ -1,22 +1,21 @@
 import { PrismaClient, Status } from "@prisma/client";
+import { createOrderParams, updateOrderParams } from "../types";
 
 export class OrderRepository {
     prisma = new PrismaClient()
-    async create(createOrderParams: {
-        deliveryEstimate: Date | null
-        userId: string | null
-    }) {
+
+    async create(createOrderParams: createOrderParams) {
         const order = await this.prisma.order.create({
-            data:createOrderParams
+            data: createOrderParams
         })
 
         return order
     }
 
-    async getById(orderId:string){
+    async getById(orderId: string){
         const order = await this.prisma.order.findUnique({
             where:{
-                id:orderId
+                id: orderId
             }
         })
 
@@ -29,16 +28,20 @@ export class OrderRepository {
         return orders
     }
 
-    async updateById(orderId:string, updateOrderParams:{
-        receiveDate:Date,
-        status:Status,
-        userId:string
-    }){
+    async updateById(orderId:string, updateOrderParams: updateOrderParams){
         const order = await this.prisma.order.update({
             where:{
                 id:orderId
             },
             data:updateOrderParams
+        })
+
+        return order
+    }
+
+    async delete(orderId:string){
+        const order = await this.prisma.order.delete({
+            where: {id: orderId}
         })
 
         return order

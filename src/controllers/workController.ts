@@ -92,12 +92,7 @@ export class WorkController {
         const unitIdValidated = isUuid.data.unitId
 
         try {
-            const work = await this.workUseCase.getById(userIdValidated, unitIdValidated, {
-                include: {
-                    Unit: true,
-                    User: true
-                }
-            })
+            const work = await this.workUseCase.getById(userIdValidated, unitIdValidated)
 
             if(!work) {
                 httpResponse.status = 404
@@ -232,5 +227,44 @@ export class WorkController {
             
            return  res.status(httpResponse.status).json(httpResponse); 
         }
+    }
+
+    async getWorksByUserId(req: Request, res: Response){
+        const {userId} = req.params
+
+        const httpResponse: RequestHttpResponse = {
+            status: 200,
+            success: true,
+            message: "Lista de Trabalhadores"
+        }
+
+        const isUuid = await z.string().uuid().safeParseAsync(userId)
+
+        if(!isUuid.success){
+            httpResponse.status - 400
+            httpResponse.success = false
+            httpResponse.message = `The user id is not valid.`
+            httpResponse.errors = isUuid.error.flatten().fieldErrors
+            
+            return res.status(httpResponse.status).json(httpResponse)
+        }
+
+        try {
+            const user_works = await this.workUseCase.getWorksByUserId(isUuid.data)
+
+            httpResponse.data = user_works
+
+            return res.status(httpResponse.status).json(httpResponse); 
+            
+        } catch (error) {
+            console.error("Error get user's workers", error);
+
+            httpResponse.status = 500
+            httpResponse.success = false
+            httpResponse.message = 'Internal server error'
+            
+           return  res.status(httpResponse.status).json(httpResponse); 
+        }
+
     }
 }
