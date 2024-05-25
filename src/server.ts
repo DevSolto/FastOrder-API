@@ -5,6 +5,7 @@ import productRoutes from './routes/productRoutes';
 import unitRoutes from './routes/unitRoutes';
 import worksRoutes from './routes/workRoutes';
 import orderRoutes from './routes/orderRoutes';
+import orderItemsRoutes from './routes/orderItems'
 
 const app = express()
 
@@ -14,7 +15,7 @@ app.use(express.json())
 app.use('/api/users', [worksRoutes, userRoutes]); // Define o prefixo '/api/users' para todas as rotas de usuário
 app.use('/api/products', productRoutes); // Define o prefixo '/api/users' para todas as rotas de usuário
 app.use('/api/units', unitRoutes); // Define o prefixo '/api/users' para todas as rotas de usuário
-app.use('/api/order', orderRoutes)
+app.use('/api/order', [orderItemsRoutes, orderRoutes])
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)
