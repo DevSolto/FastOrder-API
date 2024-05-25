@@ -1,29 +1,23 @@
 // Importando Banco de dados
 import { PrismaClient, Type } from "@prisma/client";
-
+import { createProductParams, updateProductParams } from "../types" 
 // Tornando a classe visível 
-export class productsRepositories{
+export class ProductRepository{
     prisma = new PrismaClient()
 
-    public async getByName(name:string){
+    public async getByName(name:string) {
      
-    // Método para encontrar produto pelo nome 
-    const product = await this.prisma.product.findUnique({
-        where:{
-           name:name
-        }
-    })
-    return product;
+        // Método para encontrar produto pelo nome 
+        const product = await this.prisma.product.findUnique({
+            where:{
+            name:name
+            }
+        })
+        return product;
     }
     // Método para criar novo produto
 
-    async create(createProductParams:{
-        id:string
-        name:string
-        description:string
-        type:Type
-        
-    }){
+    async create(createProductParams: createProductParams){
         const product = await this.prisma.product.create({
             data:createProductParams
         })
@@ -33,9 +27,9 @@ export class productsRepositories{
     // Método para buscar todos os produtos 
     async getAllProducts(){
 
-    const product = await this.prisma.product.findMany()
-    return product;
-} 
+        const product = await this.prisma.product.findMany()
+        return product;
+    } 
 
     // Método para buscar produto pelo Id
     async getById(productId:string){
@@ -45,14 +39,10 @@ export class productsRepositories{
             }
         })
         return productId;
-}
+    }
     // Método para atualizar produto pelo Id 
 
-    async updateById(productId:string, productParams:{
-        name:string
-        description:string
-        type:Type
-    }){
+    async updateById(productId:string, productParams: updateProductParams){
         const product = await this.prisma.product.update({
             where:{
                 id:productId
@@ -61,7 +51,8 @@ export class productsRepositories{
         
         })
          return product
-}
+    }
+
     // Método para excluir produto pelo id 
     async deleteById(produtctId:string){
         const product = await this.prisma.product.delete({
@@ -69,6 +60,7 @@ export class productsRepositories{
                 id:produtctId
             }
         })
+
         return product // aqui não sabia se devia retornar ja que teoricamente ta excluindo 
     }
 }

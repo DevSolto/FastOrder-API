@@ -35,7 +35,7 @@ export class WorkController {
         const request_body_validation = await createWorkSchema.safeParseAsync(req.body)
 
         const httpResponse: RequestHttpResponse = {
-            status: 200,
+            status: 201,
             success: true,
             message: "Trabalhador Registrado com Sucesso"
         }
@@ -52,7 +52,7 @@ export class WorkController {
         try {
             const work = await this.workUseCase.create(request_body_validation.data)
 
-            res.status(201).json(work)
+            res.status(httpResponse.status).json(httpResponse)
         } catch (error) {
             console.error('Error registring a work:', error);
             
