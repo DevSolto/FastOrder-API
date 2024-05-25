@@ -3,6 +3,7 @@ import { createUnitParams, updateUnitParams } from "../types";
 
 export class UnitRepository{
 
+    // Método para criar unidade 
     prisma = new PrismaClient
 
     async create(createUnitParams: createUnitParams) {
@@ -47,6 +48,7 @@ export class UnitRepository{
     async deleteById(unitId: string) {
         const unit = await this.prisma.unit.delete({
             where: {id: unitId}
+
         })
 
         return unit

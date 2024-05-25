@@ -1,3 +1,4 @@
+
 import { Router } from "express";
 import { UnitController } from "../controllers/unitController"
 import { PrismaClient } from "@prisma/client";
@@ -23,6 +24,7 @@ router.put("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
     return await unitControler.deleteById(req, res)
+
 })
 
 export default router
