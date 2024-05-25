@@ -4,6 +4,9 @@ import { IsEmail, IsNotEmpty, IsString, validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 import { CpfBeingUsed, EmailBeingUsed, PhoneBeingUsed, UserNotFound } from '../errors/userErro';
 import validator from 'validator';
+import { AuthenticateDocs } from 'validation-docs-br';
+import validatorTelefone from 'validar-telefone';
+
 
 // Controlador que lida com as requisições HTTP relacionadas a usuários
 export class UserController {
@@ -54,16 +57,38 @@ export class UserController {
         res.status(400).json({ errors: errors.map(error => error.constraints) }); // Retorna erros de validação com status 400
         return;
       }
-      // TODO: Validar CPF
-      // TODO: Validar email
-      // TODO: Validar telefone
-      // TODO: Validar senha
+      const authenticate = new AuthenticateDocs()
+      const isCpf = authenticate.cpf(createUserDto.cpf)
 
+      if (!isCpf) {
+        res.status(400).json({ message: 'Cpf not valid' }); // Retorna erros de validação com status 400
+        return;
+      }
+
+      const isEmail = validator.isEmail(createUserDto.email)
+
+      if (!isEmail) {
+        res.status(400).json({ message: 'Email not valid' }); // Retorna erros de validação com status 400
+        return;
+      }
+
+      const isPhone = validatorTelefone(createUserDto.phone,)
+
+      if (!isPhone) {
+        res.status(400).json({ message: 'Phone not valid' }); // Retorna erros de validação com status 400
+        return;
+      }
+
+      const isStrongPassword = validator.isStrongPassword(createUserDto.password)
+      if (!isStrongPassword) {
+        res.status(400).json({
+          message: 'Very easy password'
+        });
+      }
       const user = await this.userUseCase.create(createUserDto); // Cria o usuário usando a classe de casos de uso
       res.status(201).json(user); // Retorna o usuário criado com status 201
     } catch (error) {
 
-      // TODO: ISTO ETÁ UMA MERDA
       const isUserError = error instanceof EmailBeingUsed || error instanceof CpfBeingUsed || error instanceof PhoneBeingUsed
 
       if (isUserError) {
@@ -76,6 +101,7 @@ export class UserController {
       res.status(500).json({ message: 'Internal server error' }); // Retorna erro 500 em caso de falha interna
     }
   }
+  
   async update(req: Request, res: Response): Promise<void> {
     try {
       const updateUserParams:
@@ -97,9 +123,25 @@ export class UserController {
           });
         }
       }
-      // TODO: Validar CPF
-      // TODO: Validar senha
-      
+
+      if (updateUserParams.cpf) {
+        const authenticate = new AuthenticateDocs()
+        const isCpf = authenticate.cpf(updateUserParams.cpf)
+
+        if (!isCpf) {
+          res.status(400).json({ message: 'Cpf not valid' }); // Retorna erros de validação com status 400
+          return;
+        }
+      }
+      if (updateUserParams.password) {
+        const isStrongPassword = validator.isStrongPassword(updateUserParams.password)
+        if (!isStrongPassword) {
+          res.status(400).json({
+            message: 'Very easy password'
+          });
+        }
+      }
+
       if (updateUserParams.password) {
         const isStrongPassword = validator.isStrongPassword(updateUserParams.password)
         if (!isStrongPassword) {
@@ -111,16 +153,15 @@ export class UserController {
 
       const user = await this.userUseCase.update(req.params.id, updateUserParams)
 
-      if (user){
+      if (user) {
         res.status(200).json(user)
-      }else{
+      } else {
         res.status(400).json({
-          message:'User not found'
+          message: 'User not found'
         })
       }
     } catch (error) {
 
-      // TODO: ISTO ETÁ UMA MERDA
       const isUserError = error instanceof EmailBeingUsed || error instanceof CpfBeingUsed || error instanceof PhoneBeingUsed || error instanceof UserNotFound
 
       if (isUserError) {
@@ -135,7 +176,6 @@ export class UserController {
   }
 }
 
-// Classe DTO para validação e transformação de dados de criação de usuário
 class CreateUserDTO {
   @IsNotEmpty({ message: 'Name is required' })
   @IsString({ message: 'Name must be a string' })
