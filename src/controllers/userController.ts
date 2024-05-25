@@ -139,25 +139,25 @@ export class UserController {
 class CreateUserDTO {
   @IsNotEmpty({ message: 'Name is required' })
   @IsString({ message: 'Name must be a string' })
-  name!: string;
+  name!: string
 
   @IsNotEmpty({ message: 'Cpf is required' })
   @IsString({ message: 'Cpf must be a string' })
-  cpf!: string;
+  cpf!: string
 
   @IsNotEmpty({ message: 'Password is required' })
   @IsString({ message: 'Password must be a string' })
-  password!: string;
+  password!: string
 
   @IsNotEmpty({ message: 'Phone is required' })
   @IsString({ message: 'Phone must be a string' })
-  phone!: string;
+  phone!: string
 
   @IsNotEmpty({ message: 'Role is required' })
   @IsString({ message: 'Role must be a string' })
-  role!: string;
+  role!: string
 
   @IsNotEmpty({ message: 'Email is required' })
   @IsEmail({}, { message: 'Invalid email' })
-  email!: string;
+  email!: string
 }

@@ -1,54 +1,74 @@
+// Importando Banco de dados
 import { PrismaClient, Type } from "@prisma/client";
-import { createProductParams, updateProductParams } from "../types";
 
-// Classe que representa o repositório de produtos, responsável por interagir com o banco de dados
-export class ProductRepository {
+// Tornando a classe visível 
+export class productsRepositories{
     prisma = new PrismaClient()
 
-    public async getByName(name: string) {
-        const product = await this.prisma.product.findUnique({
-            where: { name }
-        });
+    public async getByName(name:string){
+     
+    // Método para encontrar produto pelo nome 
+    const product = await this.prisma.product.findUnique({
+        where:{
+           name:name
+        }
+    })
+    return product;
+    }
+    // Método para criar novo produto
 
+    async create(createProductParams:{
+        id:string
+        name:string
+        description:string
+        type:Type
+        
+    }){
+        const product = await this.prisma.product.create({
+            data:createProductParams
+        })
         return product;
     }
 
-    public async create(createProductParams: createProductParams) {
-        const product = await this.prisma.product.create({
-            data: createProductParams
+    // Método para buscar todos os produtos 
+    async getAllProducts(){
+
+    const product = await this.prisma.product.findMany()
+    return product;
+} 
+
+    // Método para buscar produto pelo Id
+    async getById(productId:string){
+        const order = await this.prisma.product.findUnique({
+            where:{
+                id:productId
+            }
         })
+        return productId;
+}
+    // Método para atualizar produto pelo Id 
 
-        return product
-    }
-
-    public getAllProducts = async () => {
-        const products = await this.prisma.product.findMany()
-
-        return products
-    }
-
-    public async getById(productId: string) {
-        const product = await this.prisma.product.findUnique({
-            where: {id: productId}
+    async updateById(productId:string, productParams:{
+        name:string
+        description:string
+        type:Type
+    }){
+        const product = await this.prisma.product.update({
+            where:{
+                id:productId
+            },
+            data:productParams
+        
         })
-
-        return product
-    }
-
-    public async updateById(productId: string, updateProductParams: updateProductParams) {
-        const productUpdated = await this.prisma.product.update({
-            where: {id: productId},
-            data: updateProductParams
+         return product
+}
+    // Método para excluir produto pelo id 
+    async deleteById(produtctId:string){
+        const product = await this.prisma.product.delete({
+            where:{
+                id:produtctId
+            }
         })
-
-        return productUpdated
-    }
-
-    public async deleteById(productId: string) {
-        const productDeleted = await this.prisma.product.delete({
-            where: {id: productId}
-        })
-
-        return productDeleted
+        return product // aqui não sabia se devia retornar ja que teoricamente ta excluindo 
     }
 }

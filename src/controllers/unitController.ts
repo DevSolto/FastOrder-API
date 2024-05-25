@@ -1,12 +1,16 @@
+import { IsNotEmpty, IsString, validate } from "class-validator";
 import { UnitUseCase } from "../useCases/unitUseCase";
+
 import { createUnitParams } from "../types";
 import { Request, Response } from "express"
 import validator from "validator"
 import { RequestHttpResponse } from "../types"
 import { createUnitSchema, updateUnitSchema } from "../schemas/unitSchemas";
 
-export class UnitController{
+
+export class UnitController {
     unitUseCase = new UnitUseCase()
+
 
     async getById(req: Request, res: Response) {
         const unitId = req.params.id
@@ -50,8 +54,10 @@ export class UnitController{
             httpResponse.message = 'Internal server error'
             
            return  res.status(httpResponse.status).json(httpResponse); 
+
         }
     }
+
 
     async getAllUnits(req: Request, res: Response) {
         const httpResponse: RequestHttpResponse = {
@@ -211,4 +217,5 @@ export class UnitController{
            return  res.status(httpResponse.status).json(httpResponse); 
         }
     }
+
 }
