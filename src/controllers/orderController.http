@@ -1,0 +1,38 @@
+@BaseURL=http://localhost:3000/api/orders
+@orderId=6c6b21e5-d5ae-4cc9-9899-77b6cb0a35fb
+@userId=4135a788-5217-4447-a2e4-f80ca659e0cd
+
+### Create Order
+POST {{BaseURL}} HTTP/1.1
+Content-Type: application/json
+
+{
+    "creationDate": "2024-05-05",
+    "receivedDate": "2024-05-05",
+    "deliveryEstimate": "2024-05-06",
+    "status": "REFFUSED",
+    "userId": "{{userId}}"
+}
+
+### Get All Order
+GET {{BaseURL}} HTTP/1.1
+
+
+### Get a Order Details
+GET {{BaseURL}}/{{orderId}} HTTP/1.1
+
+### Update a Order Unity
+PUT {{BaseURL}}/{{orderId}} HTTP/1.1
+Content-Type: application/json
+
+{
+    "creationDate": "2024-05-05",
+    "receiveDate": "2024-05-05",
+    "deliveryEstimate": "2025-01-01",
+    "status": "OPENED",
+    "userId": "{{userId}}"
+}
+
+
+### Delete a Order Unity
+DELETE {{BaseURL}}/{{orderId}} HTTP/1.1

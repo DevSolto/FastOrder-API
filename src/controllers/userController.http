@@ -1,5 +1,5 @@
 @BaseURL=http://localhost:3000/api
-@userId=c3ce0201-11d1-4738-ac69-66505b42e6e0
+@userId=4135a788-5217-4447-a2e4-f80ca659e0cd
 
 ### Create a User
 POST {{BaseURL}}/users

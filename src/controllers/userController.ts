@@ -93,7 +93,6 @@ export class UserController {
     async create(req: Request, res: Response) {
         const request_body_validation = await createUserSchema.safeParseAsync(req.body)
 
-
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
@@ -103,7 +102,7 @@ export class UserController {
         if(!request_body_validation.success){
             httpResponse.status = 400
             httpResponse.success = false
-            httpResponse.message = "Não foi possivel criar o usuario, verifique os valores dos campos"
+            httpResponse.message = "Unable to create user, please check the values"
             httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
             
             return res.status(httpResponse.status).json(httpResponse)
@@ -156,7 +155,7 @@ export class UserController {
         try {
             const userExist = await this.userUseCase.getById(userId)
 
-            if(!userExist) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
+            if(!userExist) {
                 httpResponse.status = 404
                 httpResponse.success = false
                 httpResponse.message =  'User Not Found'
@@ -188,7 +187,7 @@ export class UserController {
               message: 'User Deleted Succefully'
           }
 
-          const isUuid = validator.isUUID(userId) // Mudar Pro Zod????
+          const isUuid = validator.isUUID(userId) 
 
           if (!isUuid) {
               httpResponse.status = 400
@@ -201,7 +200,7 @@ export class UserController {
           try {
               const userExist = await this.userUseCase.getById(userId)
 
-              if(!userExist) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
+              if(!userExist) { 
                   httpResponse.status = 404
                   httpResponse.success = false
                   httpResponse.message =  'User Not Found'

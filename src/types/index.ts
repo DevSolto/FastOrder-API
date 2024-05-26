@@ -88,7 +88,7 @@ export type createOrderItemsParams = {
     productId: string,
     orderId: string,
     observation: string,
-    amount:number
+    amount: number
 }
 
 export type updateOrderItemsParams = {

@@ -19,7 +19,7 @@ export class ProductRepository{
 
     async create(createProductParams: createProductParams){
         const product = await this.prisma.product.create({
-            data:createProductParams
+            data: createProductParams
         })
         return product;
     }
@@ -27,18 +27,21 @@ export class ProductRepository{
     // Método para buscar todos os produtos 
     async getAllProducts(){
 
-        const product = await this.prisma.product.findMany()
+        const product = await this.prisma.product.findMany({
+
+        })
         return product;
     } 
 
     // Método para buscar produto pelo Id
     async getById(productId:string){
-        const order = await this.prisma.product.findUnique({
+        const product = await this.prisma.product.findUnique({
             where:{
                 id:productId
-            }
+            },
+
         })
-        return productId;
+        return product;
     }
     // Método para atualizar produto pelo Id 
 

@@ -12,7 +12,7 @@ export class OrdersUnitiesController {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Lista de Trabalhadores"
+            message: "workers list"
         }
 
         try {
@@ -38,7 +38,7 @@ export class OrdersUnitiesController {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Detalhes do pedido da unidade"
+            message: "ordering details for that unit"
         }
 
         const isUuid = await  z.object({

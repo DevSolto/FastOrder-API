@@ -1,0 +1,39 @@
+@BaseURL=http://localhost:3000/api/users
+@userId=4135a788-5217-4447-a2e4-f80ca659e0cd
+@unitId=4a26d106-fca0-4a45-aa35-350dfc033c5a
+
+
+### Create an Works (User-Unity Relation)
+POST {{BaseURL}}/works
+Content-Type: application/json
+
+{
+    "userId": "{{userId}}",
+    "unitId": "{{unitId}}",
+    "startingDate": "2021-05-06",
+    "endingDate": "2022-06-05"
+}
+
+### Get All Works
+GET {{BaseURL}}/works
+
+### Get All Works From a Specific User
+GET {{BaseURL}}/{{userId}}/works
+
+### Get the Unity Details from a user's work
+GET {{BaseURL}}/{{userId}}/works/{{unitId}}
+
+### Update an Work
+PUT {{BaseURL}}/{{userId}}/works/{{unitId}}
+Content-Type: application/json
+
+{
+    "userId": "{{userId}}",
+    "unitId": "{{unitId}}",
+    "startingDate": "2022-02-03",
+    "endingDate": "2024-05-07"
+}
+
+### Delete an Work
+DELETE {{BaseURL}}/{{userId}}/works/{{unitId}}
+
