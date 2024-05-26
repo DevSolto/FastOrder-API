@@ -13,10 +13,10 @@ export class OrderController {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Detalhes do Pedidos"
+            message: "Order details"
         }
 
-        const isUuid = validator.isUUID(orderId) // Mudar Pro Zod????
+        const isUuid = validator.isUUID(orderId) 
 
         if (!isUuid) {
             httpResponse.status - 400
@@ -29,7 +29,7 @@ export class OrderController {
         try {
             const order = await this.orderUseCase.getById(orderId)
 
-            if(!order) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
+            if(!order) {
                 httpResponse.status = 404
                 httpResponse.success = false
                 httpResponse.message =  'order Not Found'
@@ -37,7 +37,8 @@ export class OrderController {
                 return res.status(httpResponse.status).json(httpResponse)
             }    
 
-           return res.status(httpResponse.status).json(order)
+            httpResponse.data = order
+           return res.status(httpResponse.status).json(httpResponse)
 
         } catch (error) {
             console.error('Error fetching order by ID:', error);
@@ -54,7 +55,7 @@ export class OrderController {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Lista de Pedidos"
+            message: "Order list"
         }
 
         try {
@@ -81,13 +82,13 @@ export class OrderController {
         const httpResponse: RequestHttpResponse = {
             status: 201,
             success: true,
-            message: "Produto Criado com Sucesso"
+            message: "Successfully created order"
         }
 
         if(!request_body_validation.success){
             httpResponse.status = 400
             httpResponse.success = false
-            httpResponse.message = "Não foi possivel criar o pedido, verifique os valores dos campos"
+            httpResponse.message = "Unable to create order, please check the values"
             httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
             
             return res.status(httpResponse.status).json(httpResponse)
@@ -114,10 +115,10 @@ export class OrderController {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Produto Atualizado com Sucesso"
+            message: "Successfully order update"
         }
 
-        const isUuid = validator.isUUID(orderId) // Mudar Pro Zod????
+        const isUuid = validator.isUUID(orderId) 
         const request_body_validation = await updateOrderSchema.safeParseAsync(req.body)
 
         if (!isUuid) {
@@ -131,7 +132,7 @@ export class OrderController {
         if(!request_body_validation.success){
             httpResponse.status = 400
             httpResponse.success = false
-            httpResponse.message = "Não foi possivel atualizar o produto, verifique os valores dos campos"
+            httpResponse.message = "Unable to update order, please check the values"
             httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
             
             return res.status(httpResponse.status).json(httpResponse)
@@ -139,7 +140,7 @@ export class OrderController {
         try {
             const orderExist = await this.orderUseCase.getById(orderId)
 
-            if(!orderExist) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
+            if(!orderExist) { 
                 httpResponse.status = 404
                 httpResponse.success = false
                 httpResponse.message =  'Order Not Found'
@@ -184,7 +185,7 @@ export class OrderController {
         try {
             const orderExist = await this.orderUseCase.getById(orderId)
 
-            if(!orderExist) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
+            if(!orderExist) { 
                 httpResponse.status = 404
                 httpResponse.success = false
                 httpResponse.message =  'order Not Found'

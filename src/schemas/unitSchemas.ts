@@ -2,15 +2,17 @@ import { z } from 'zod'
 import { UnitUseCase } from '../useCases/unitUseCase'
 
 const unitUseCase = new UnitUseCase()
-
+const types = ["SUPPLIER","SELLER"] as const
 /* Mensagens de Erro para as validações */
 const error_messages = {
-    empty_field: 'Preencha esse Campo',
-    required_field_in_json: 'Campo não presente no JSON',
+    empty_field: 'Fill this field',
+    required_field_in_json: 'Not found in JSON ',
     type: {
-        string: 'O valor deve ser uma string',
+        string: 'The value must be a string',
     },
-    unique_name: "Nome de Unidade já cadastrado"
+    unique_name: "Unity name already in use",
+    max_length: "Maximun number of characters exceeded",
+    type_invalid: `Invalid unity type, choose a valid type: ${types.toString()}`
 }
 
 /* Schema de Validação para o campo Name de Produto */
@@ -20,7 +22,7 @@ const unitNameSchema = z
         invalid_type_error: error_messages.type.string
     })
     .min(1, error_messages.empty_field)
-    .max(100, 'Campo com valor superior a 50')
+    .max(100, error_messages.max_length)
     .refine(async name => {
         const unit = await unitUseCase.getByName(name)
 
@@ -35,10 +37,9 @@ const unitDescriptionSchema = z
     })
     .min(1, error_messages.empty_field)
 
-const unitTypeSchema = z.enum(['SUPPLIER', 'SELLER'], {
+const unitTypeSchema = z.enum(types, {
     required_error: error_messages.required_field_in_json,
-    message: "Valor não permitido"
-    /* Personalizar as mensagens */
+    message: error_messages.type_invalid
 })
 
 export const createUnitSchema = z.object({

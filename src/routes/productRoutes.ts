@@ -12,15 +12,15 @@ router.post("", async (req, res) => {
     return await productControler.create(req, res)
 })
 
-router.get("/:id", async (req, res) => {
+router.get("/:productId", async (req, res) => {
     return await productControler.getById(req, res)
 })
 
-router.put("/:id", async (req, res) => {
+router.put("/:productId", async (req, res) => {
     return await productControler.updateById(req, res)
 })
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:productId", async (req, res) => {
     return await productControler.deleteById(req, res)
 })
 

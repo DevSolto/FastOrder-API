@@ -12,7 +12,6 @@ const error_messages = {
     type: {
         string: 'The value must be a string',
     },
-    unique_name: "Product already registred",
     max_length: "Maximun number of characters exceeded",
     email_format: "Invalid email format",
     email_in_use: "Email already in use",

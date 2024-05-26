@@ -4,14 +4,17 @@ import { UserUseCase } from '../useCases/userUseCase'
 
 const productUseCase = new ProductUseCase()
 
+const types = ['SALTY', 'SWEET'] as const
 /* Mensagens de Erro para as validações */
 const error_messages = {
-    empty_field: 'Preencha esse Campo',
-    required_field_in_json: 'Campo não presente no JSON',
+    empty_field: 'Fill this field',
+    required_field_in_json: 'Not found in JSON ',
     type: {
-        string: 'O valor deve ser uma string',
+        string: 'The value must be a string',
     },
-    unique_name: "Nome do Produto já cadastrado"
+    unique_name: "Product name already in use",
+    max_length: "Maximun number of characters exceeded",
+    type_invalid: `Invalid product type, choose a valid type: ${types.toString()}`
 }
 
 /* Schema de Validação para o campo Name de Produto */
@@ -21,7 +24,7 @@ const productNameSchema = z
         invalid_type_error: error_messages.type.string
     })
     .min(1, error_messages.empty_field)
-    .max(100, 'Campo com valor superior a 50')
+    .max(100, error_messages.max_length)
     .refine(async name => {
         const product = await productUseCase.getByName(name)
 
@@ -37,9 +40,9 @@ const productDescriptionSchema = z
     .min(1, error_messages.empty_field)
 
 /* Schema de validação para o campo Type de Produto */
-const productTypeSchema = z.enum(['SALTY', 'SWEET'], {
+const productTypeSchema = z.enum(types, {
     required_error: error_messages.required_field_in_json,
-    message: "Valor não permitido"
+    message: error_messages.type_invalid
     /* Personalizar as mensagens */
 })
 

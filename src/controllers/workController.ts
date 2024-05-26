@@ -11,7 +11,7 @@ export class WorkController {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Lista de Trabalhadores"
+            message: "Workers list"
         }
 
         try {
@@ -37,13 +37,13 @@ export class WorkController {
         const httpResponse: RequestHttpResponse = {
             status: 201,
             success: true,
-            message: "Trabalhador Registrado com Sucesso"
+            message: "Successfully registred worker"
         }
 
         if(!request_body_validation.success){
             httpResponse.status = 400
             httpResponse.success = false
-            httpResponse.message = "Não foi possivel registrar o trabalhador, verifique os valores dos campos"
+            httpResponse.message = "Unable to regiter worker, please check the values"
             httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
             
             return res.status(httpResponse.status).json(httpResponse)
@@ -71,7 +71,7 @@ export class WorkController {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Lista de Trabalhadores"
+            message: "Workers list"
         }
 
         const isUuid = await  z.object({
@@ -122,7 +122,7 @@ export class WorkController {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Registro do Trabalhador Atualizado com Sucesso"
+            message: "Successfully worker update"
         }
 
         const isUuid = await  z.object({
@@ -144,7 +144,7 @@ export class WorkController {
         if(!request_body_validation.success){
             httpResponse.status = 400
             httpResponse.success = false
-            httpResponse.message = "Não foi possivel atualizar o trabalhador, verifique os valores dos campos"
+            httpResponse.message = "Unable to update worker, please check the values"
             httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
             
             return res.status(httpResponse.status).json(httpResponse)
@@ -156,7 +156,7 @@ export class WorkController {
         try {
             const workExist = await this.workUseCase.getById(userIdValidated,unitIdValidated)
 
-            if(!workExist) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
+            if(!workExist) {//VERIFICA
                 httpResponse.status = 404
                 httpResponse.success = false
                 httpResponse.message =  'work Not Found'
@@ -186,7 +186,7 @@ export class WorkController {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Registro do Trabalhador Apagado com Sucesso"
+            message: "Successfully worker deleted"
         }
 
         const isUuid = await z.object({
@@ -206,7 +206,7 @@ export class WorkController {
         try {
             const workExist = await this.workUseCase.getById(userId, unitId)
 
-            if(!workExist) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
+            if(!workExist) { 
                 httpResponse.status = 404
                 httpResponse.success = false
                 httpResponse.message =  'Work Not Found'
@@ -219,7 +219,7 @@ export class WorkController {
 
             return res.status(httpResponse.status).json(httpResponse)
         } catch (error) {
-            console.error('Error updating worker', error);
+            console.error('Error deleting worker', error);
 
             httpResponse.status = 500
             httpResponse.success = false
@@ -235,7 +235,7 @@ export class WorkController {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Lista de Trabalhadores"
+            message: "Workers List From the User"
         }
 
         const isUuid = await z.string().uuid().safeParseAsync(userId)

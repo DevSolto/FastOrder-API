@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { PrismaClient } from "@prisma/client";
-import { OrdersUnitiesController } from "../controllers/orderIUnitiesController";
+import { OrdersUnitiesController } from "../controllers/orderUnitiesController";
 
 const router = Router()
 const orderUnitiesControler = new OrdersUnitiesController()

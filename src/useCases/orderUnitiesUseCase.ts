@@ -5,7 +5,7 @@ export class OrdersUnitiesUseCase {
     orderUnitiesRepository = new OrdersUnitiesRepository()
 
     public async create(createOrderUnityParams: createOrderUnityParams) {
-        const workById = await this.orderUnitiesRepository.getById(
+        const orderUnitiesExist = await this.orderUnitiesRepository.getById(
             createOrderUnityParams.orderId, createOrderUnityParams.unitId
         )
 
@@ -13,9 +13,9 @@ export class OrdersUnitiesUseCase {
         /* if(workById != null) 
             throw new WorkIAlreadyExists() */
 
-        const work = await this.orderUnitiesRepository.create(createOrderUnityParams)
+        const orderUnities = await this.orderUnitiesRepository.create(createOrderUnityParams)
 
-        return work
+        return orderUnities
     }
 
     public getAllOrdersUnities = async () => {

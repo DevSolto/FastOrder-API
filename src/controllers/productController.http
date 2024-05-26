@@ -1,0 +1,34 @@
+@BaseURL=http://localhost:3000/api
+@productId=fd824dac-b008-43ce-9ee2-e7424622dc1c
+
+### Create a Product
+POST {{BaseURL}}/products
+Content-Type: application/json
+
+{
+    "name": "pamonha",
+    "description": "de milho",
+    "type": "SALTY"
+}
+ 
+
+### Get All Products 
+GET {{BaseURL}}/products
+
+
+### Get a Products Details  
+GET {{BaseURL}}/products/{{productId}}
+
+
+### Get a Products Details  
+PUT {{BaseURL}}/products/{{productId}}
+Content-Type: application/json
+
+{
+    "name": "paçoca",
+    "description": "ammendoim",
+    "type": "SALTY"
+}
+
+### Delete a Products  
+DELETE {{BaseURL}}/products/{{productId}}

@@ -1,0 +1,33 @@
+@BaseURL=http://localhost:3000/api
+@unitId=2da9fe9b-5eab-4d6c-8def-c219ea0c2c0e
+
+
+### Create an Unity
+POST {{BaseURL}}/unities
+Content-Type: application/json
+
+{
+    "name": "Jabaquara",
+    "description": "perto do metrô",
+    "type":"SELLER"
+}
+
+### Get All Unities
+GET {{BaseURL}}/unities
+
+### Get an Unity Details
+GET {{BaseURL}}/unities/{{unitId}}
+
+### Update an Unity
+PUT {{BaseURL}}/unities/{{unitId}}
+Content-Type: application/json
+
+{
+    "name": "Vila Alpina",
+    "description": "perto do metrô",
+    "type":"SELLER"
+}
+
+### Delete an Unity
+DELETE {{BaseURL}}/unities/{{unitId}}
+

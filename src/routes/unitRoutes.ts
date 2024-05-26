@@ -14,15 +14,15 @@ router.post("", async (req, res) => {
     return await unitControler.create(req, res)
 })
 
-router.get("/:id", async (req, res) => {
+router.get("/:unitId", async (req, res) => {
     return await unitControler.getById(req, res)
 })
 
-router.put("/:id", async (req, res) => {
+router.put("/:unitId", async (req, res) => {
     return await unitControler.updateById(req, res)
 })
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:unitId", async (req, res) => {
     return await unitControler.deleteById(req, res)
 
 })

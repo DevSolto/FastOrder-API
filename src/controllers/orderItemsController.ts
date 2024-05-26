@@ -13,7 +13,7 @@ export class OrderItemsController {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Lista de Trabalhadores"
+            message: "Workers list"
         }
 
         const isUuid = await  z.object({
@@ -62,7 +62,7 @@ export class OrderItemsController {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Lista de Pedidos"
+            message: "Order list"
         }
 
         try {
@@ -89,13 +89,13 @@ export class OrderItemsController {
         const httpResponse: RequestHttpResponse = {
             status: 201,
             success: true,
-            message: "Produto adicionado ao pedido com Sucesso"
+            message: "Product added to order successfully"
         }
 
         if(!request_body_validation.success){
             httpResponse.status = 400
             httpResponse.success = false
-            httpResponse.message = "Não foi possivel criar o produto ao pedido, verifique os valores dos campos"
+            httpResponse.message = "Unable to create product upon request"
             httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
             
             return res.status(httpResponse.status).json(httpResponse)
@@ -122,7 +122,7 @@ export class OrderItemsController {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Item do pedido atualizado com Sucesso"
+            message: "Sucessfully order update"
         }
 
         const isUuid = await  z.object({
@@ -144,7 +144,7 @@ export class OrderItemsController {
         if(!request_body_validation.success){
             httpResponse.status = 400
             httpResponse.success = false
-            httpResponse.message = "Não foi possivel atualizar o item do pedido, verifique os valores dos campos"
+            httpResponse.message = "Unable to update order, please check the values"
             httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
             
             return res.status(httpResponse.status).json(httpResponse)
@@ -156,8 +156,7 @@ export class OrderItemsController {
         try {
             const workExist = await this.orderItemUseCase.getById(orderIdValidated,productIdValidated)
 
-            if(!workExist) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
-                httpResponse.status = 404
+            if(!workExist) {
                 httpResponse.success = false
                 httpResponse.message =  'work Not Found'
 
@@ -186,7 +185,7 @@ export class OrderItemsController {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Item do pedido apagado com sucesso"
+            message: " Successfully deleted item"
         }
 
         const isUuid = await  z.object({
@@ -209,7 +208,7 @@ export class OrderItemsController {
         try {
             const workExist = await this.orderItemUseCase.getById(orderIdValidated, productIdValidated)
 
-            if(!workExist) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
+            if(!workExist) { 
                 httpResponse.status = 404
                 httpResponse.success = false
                 httpResponse.message =  'Work Not Found'
@@ -240,7 +239,7 @@ export class OrderItemsController {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Lista de Trabalhadores"
+            message: "Workers list"
         }
 
         const isUuid = await z.string().uuid().safeParseAsync(orderId)
