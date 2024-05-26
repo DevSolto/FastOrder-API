@@ -1,0 +1,37 @@
+@BaseURL=http://localhost:3000/api
+@userId=c3ce0201-11d1-4738-ac69-66505b42e6e0
+
+### Create a User
+POST {{BaseURL}}/users
+Content-Type: application/json
+
+{
+    "name": "Vinicius",
+    "email": "vini@vini.com",
+    "password": "12345678",
+    "cpf": "12312312312",
+    "phone": "11999999999",
+    "role":"ADMIN"  
+}
+
+
+### Get All Users
+GET {{BaseURL}}/users
+
+
+### Get a User Details By ID
+GET {{BaseURL}}/users/{{userId}}
+
+
+### Update a User
+PUT {{BaseURL}}/users/{{userId}}
+Content-Type: application/json
+
+{
+    "email": "nero@vini.com",
+    "cpf": "98745632125",
+    "phone": "11952365471"
+}
+
+### Delete a User
+DELETE {{BaseURL}}/users/{{userId}}
