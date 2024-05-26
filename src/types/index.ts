@@ -1,4 +1,4 @@
-import { Type, UnitType, Status } from "@prisma/client";
+import { Type, UnitType, Status, Role } from "@prisma/client";
 
 export interface RequestHttpResponse {
     status: number,
@@ -7,6 +7,25 @@ export interface RequestHttpResponse {
     data?: object,
     errors?: object
 }
+
+export type createUserParams = {
+    name: string,
+    cpf: string,
+    email: string,
+    password: string,
+    phone: string,
+    role: Role
+}
+
+export type updateUserParams = {
+    name?: string,
+    cpf?: string,
+    email?: string,
+    password?: string,
+    phone?: string,
+    role?: Role 
+}
+
 
 export type createProductParams = {
     name: string,

@@ -2,6 +2,7 @@ import { Role, User } from "@prisma/client"; // Importa os tipos Role e User do 
 import { UserRepository } from "../repositories/userRepository"; // Importa o repositório de usuários
 import bcrypt from "bcrypt"
 import { CpfBeingUsed, EmailBeingUsed, PhoneBeingUsed, UserNotFound } from "../errors/userErro";
+import { createUserParams, updateUserParams } from "../types";
 
 // Classe que representa os casos de uso relacionados a usuários
 export class UserUseCase {
@@ -18,16 +19,22 @@ export class UserUseCase {
         return users
     }
 
-    async create(createUserParams:
-        {
-            name: string,
-            cpf: string,
-            email: string,
-            password: string,
-            phone: string,
-            role: string
-        }
-    ) {
+    public async getByEmail(emailUser: string) {
+        const user = await this.userRepository.getByEmail(emailUser);
+        return user; // Retorna o usuário encontrado ou null
+    }
+
+    public async getByCpf(cpfUser: string) {
+        const user = await this.userRepository.getByCpf(cpfUser);
+        return user; // Retorna o usuário encontrado ou null
+    }
+
+    public async getByPhone(phoneUser: string) {
+        const user = await this.userRepository.getByPhone(phoneUser);
+        return user; // Retorna o usuário encontrado ou null
+    }
+
+    async create(createUserParams: createUserParams) {
         const userByEmail = await this.userRepository.getByEmail(createUserParams.email)
         if (userByEmail != null) {
             throw new EmailBeingUsed(createUserParams.email)
@@ -70,16 +77,7 @@ export class UserUseCase {
         return user; // Retorna o usuário criado
     }
 
-    async update(userId: string, updateUserParams:
-        {
-            name?: string,
-            email?: string,
-            cpf?: string,
-            password?: string,
-            phone?: string,
-            role?: string | Role
-        }
-    ) {
+    async update(userId: string, updateUserParams: updateUserParams) {
 
         const userExists = await this.userRepository.getById(userId)
         if(userExists == null){
@@ -110,7 +108,9 @@ export class UserUseCase {
         if (updateUserParams.password) {
             updateUserParams.password = await bcrypt.hash(updateUserParams.password, 10)
         }
+
         let userRole 
+        
         if (updateUserParams.role) {
             switch (updateUserParams.role.toUpperCase()) {
                 case Role.ADMIN.toString():
@@ -131,5 +131,17 @@ export class UserUseCase {
         })
 
         return user
+    }
+
+    public async delete(userId:string){
+        const userExists = await this.userRepository.getById(userId)
+
+        if(userExists == null){
+            throw new UserNotFound()
+        }
+
+        const userDeleted = await this.userRepository.delete(userId)
+
+        return userDeleted
     }
 }

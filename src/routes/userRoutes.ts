@@ -4,7 +4,7 @@ import { UserController } from '../controllers/userController'
 const router = Router()
 const userController = new UserController()
 
-router.get('/:id', async (req, res) => {
+router.get('/:userId', async (req, res) => {
   return await userController.getById(req, res)
 });
 
@@ -16,8 +16,12 @@ router.post('', async (req, res) => {
   return await userController.create(req, res)
 })
 
-router.patch('/:id', async(req,res)=>{
+router.put('/:userId', async(req,res)=>{
   return await userController.update(req,res)
+})
+
+router.delete('/:userId', async(req,res)=>{
+  return await userController.delete(req,res)
 })
 
 export default router
