@@ -78,3 +78,16 @@ export type updateOrderItemsParams = {
     observation?: string,
     amount?:number
 }
+
+/* Order Unities */
+export type createOrderUnityParams = {
+    orderId: string,
+    unitId: string,
+    type: UnitType,
+}
+
+export type updateOrderUnityParams = {
+    orderId?: string,
+    unitId?: string,
+    type?: UnitType,
+}
