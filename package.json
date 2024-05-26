@@ -30,7 +30,8 @@
     "jsonwebtoken": "^9.0.2",
     "prisma": "^5.14.0",
     "uuid": "^9.0.1",
-    "validator": "^13.11.0",
-    "zod": "^3.23.8"
+    "validar-telefone": "^0.1.0",
+    "validation-docs-br": "^2.1.1",
+    "validator": "^13.11.0"
   }
 }

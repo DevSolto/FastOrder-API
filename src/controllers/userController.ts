@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 import { UserUseCase } from '../useCases/userUseCase';
 import validator from 'validator';
+
 import { RequestHttpResponse } from '../types';
 import {z} from "zod"
 import { createUserSchema, updateUserSchema } from '../schemas/userSchemas';
+
 
 // Controlador que lida com as requisições HTTP relacionadas a usuários
 export class UserController {
@@ -20,12 +22,14 @@ export class UserController {
 
         const isUuid = validator.isUUID(userId)
 
+
         if (!isUuid) {
           httpResponse.status - 400
           httpResponse.success = false
           httpResponse.message = `The id ${userId} is not valid.`
           
           return res.status(httpResponse.status).json(httpResponse)
+
         }
         
       try {
@@ -52,6 +56,7 @@ export class UserController {
         
       return  res.status(httpResponse.status).json(httpResponse); 
       }
+
     }
 
     async getAll(res: Response) {
@@ -59,9 +64,11 @@ export class UserController {
           status: 200,
           success: true,
           message: "Lista de Usuarios"
+
       }
 
       /* Adicionar FIltro, Ordenação e Paginação */
+
 
       try {
           const users = await this.userUseCase.getAll()
@@ -69,6 +76,7 @@ export class UserController {
           httpResponse.data = users
           
           return res.status(httpResponse.status).json(httpResponse)
+
 
       } catch (error) {
           console.error('Error fetching all product by ID:', error);
@@ -81,8 +89,10 @@ export class UserController {
       }
     }
 
+
     async create(req: Request, res: Response) {
         const request_body_validation = await createUserSchema.safeParseAsync(req.body)
+
 
         const httpResponse: RequestHttpResponse = {
             status: 200,
