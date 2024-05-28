@@ -6,9 +6,12 @@ import unitRoutes from './routes/unitRoutes';
 import worksRoutes from './routes/workRoutes';
 import orderRoutes from './routes/orderRoutes';
 
+import cors from 'cors'
+
 const app = express()
 
 const port = process.env.PORT || 3000
+app.use(cors());
 
 app.use(express.json())
 app.use('/api/users', [worksRoutes, userRoutes]); // Define o prefixo '/api/users' para todas as rotas de usuário
