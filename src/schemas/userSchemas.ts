@@ -32,7 +32,7 @@ const nameSchema = z
     .min(1, error_messages.empty_field)
     .max(50, error_messages.max_length)
 
-
+// TODO: Validar qtd de caracterres em CPF e Phone
 /* TODO: Verificar o formato de E-mail */
 const emailSchema = z
     .string({
@@ -40,7 +40,7 @@ const emailSchema = z
         invalid_type_error: error_messages.type.string
     })
     .email({message: error_messages.email_format})
-    .min(1, error_messages.empty_field)
+    .min(1, error_messages.empty_field) 
     .max(100, error_messages.max_length)
     .refine(async email => {
         const user = await userUseCase.getByEmail(email)
@@ -63,6 +63,8 @@ const cpfSchema = z
         required_error: error_messages.required_field_in_json,
         invalid_type_error: error_messages.type.string
     })
+    .min(11, "")
+    .max(11)
     .refine(async cpf => {
         const user = await userUseCase.getByCpf(cpf)
 
