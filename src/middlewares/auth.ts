@@ -1,6 +1,9 @@
-import {Request, Response, NextFunction} from "express"
-import {RequestHttpResponse} from "../types"
-import jwt, {JsonWebTokenError} from "jsonwebtoken"
+import { Request, Response, NextFunction } from "express"
+import { RequestHttpResponse } from "../types"
+import jwt, { JsonWebTokenError } from "jsonwebtoken"
+import { UserJWTPayload } from "../types"
+import { jwtDecode } from "jwt-decode";
+
 import "dotenv/config"
 
 export const isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
@@ -10,39 +13,50 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
         message: "Authorization Header not Found"
     }
 
-    const {authorization} = req.headers
+    const { authorization } = req.headers
 
-    if(!authorization)
+    if (!authorization)
         return res.status(httpResponse.status).json(httpResponse)
 
     const [_, token] = authorization.split(' ')
 
     const { SECRET } = process.env
 
-    console.log(authorization)
+    try {
+        jwt.verify(token, SECRET ?? 'secret')
 
-    jwt.verify(token, SECRET ?? "secret",  (err, decode)=> {
-        console.log(err, decode);
-
-        if(err instanceof JsonWebTokenError) {
+        return next()
+    } catch (err) {
+        if (err instanceof JsonWebTokenError) {
             httpResponse.message = err.message
-
-            return res.status(httpResponse.status).json(httpResponse)
         } else {
-            return next()
+            httpResponse.message = "Failed to Verify JWT"
         }
-    })
+    }
+
+    return res.status(httpResponse.status).json(httpResponse)
 }
 
 
+export const is = (roles: string[]) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
+        const { authorization } = req.headers
 
+        const [_, token] = authorization!.split(' ')
 
+        const user_payload = jwtDecode<UserJWTPayload>(token)
 
+        if(!roles.includes(user_payload.role)) {
+            const httpResponse: RequestHttpResponse = {
+                status: 400,
+                success: false,
+                message: "Not Permission"
+            }
 
-
-export const is =  async(roles: string[]) => {
-    return (req: Request, res: Response, next: NextFunction) => {
-
+            return res.status(httpResponse.status).json(httpResponse)
+        }
+        
+        next()
     }
 }
 

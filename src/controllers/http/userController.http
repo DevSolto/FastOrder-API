@@ -6,12 +6,12 @@ POST {{BaseURL}}/users
 Content-Type: application/json
 
 {
-    "name": "Vinicius",
-    "email": "vini@vini.com",
-    "password": "12345678",
-    "cpf": "12312312312",
-    "phone": "11999999999",
-    "role":"ADMIN"  
+    "name": "Luana",
+    "email": "lua@vini.com",
+    "password": "987654321",
+    "cpf": "1198745632",
+    "phone": "11965231458",
+    "role":"SELLER"  
 }
 
 

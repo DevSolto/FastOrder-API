@@ -26,6 +26,14 @@ export type updateUserParams = {
     role?: Role 
 }
 
+export type UserJWTPayload = {
+    id: string,
+    name: string,
+    email: string,
+    role: string | Role
+}
+
+
 
 export type createProductParams = {
     name: string,
