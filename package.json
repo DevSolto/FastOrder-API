@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "dev": "nodemon --exec ts-node src/server.ts",
+    "build": "prisma generate && tsc",
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev src/server.ts",
     "seed": "ts-node prisma/seeds/seeds.ts"
   },
   "keywords": [],
