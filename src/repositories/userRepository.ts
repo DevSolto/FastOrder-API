@@ -1,5 +1,8 @@
 import { PrismaClient, Role } from "@prisma/client";
 
+import { createUserParams, updateUserParams } from "../types";
+// Classe que representa o repositório de usuários, responsável por interagir com o banco de dados
+
 export class UserRepository {
     prisma = new PrismaClient()
 
@@ -7,6 +10,19 @@ export class UserRepository {
         const user = await this.prisma.user.findUnique({
             where: {
                 id: idUser // Condição de busca pelo ID do usuário
+            },
+            include: {
+                _count: true,
+               orders: {
+                include: {
+                    _count: true,
+                }
+               },
+               Works: {
+                include: {
+                    Unit: true
+                }
+               } 
             }
         });
         return user; // Retorna o usuário encontrado ou null
@@ -39,16 +55,7 @@ export class UserRepository {
         return user; // Retorna o usuário encontrado ou null
     }
 
-    public async create(createUserParams: 
-        { 
-            name: string, 
-            cpf: string, 
-            email: string, 
-            password: string, 
-            phone: string, 
-            role: Role 
-        }
-    ) {
+    public async create(createUserParams: createUserParams) {
         const user = await this.prisma.user.create({
             data: createUserParams // Dados do usuário a ser criado
         });
@@ -56,21 +63,20 @@ export class UserRepository {
     }
 
     public async getAll(){
-        const users = await this.prisma.user.findMany()
+        const users = await this.prisma.user.findMany({
+            include: {
+                Works: {
+                    include: {
+                        Unit: true
+                    }
+                }
+            }
+        })
 
         return users
     }
 
-    public async update(idUser:string, updateUserParams:
-        {
-            name?:string,
-            email?:string,
-            cpf?:string,
-            password?:string,
-            phone?:string,
-            role?:Role
-        }
-    ){
+    public async update(idUser:string, updateUserParams: updateUserParams){
         const userUpdated = await this.prisma.user.update({
             where:{
                 id:idUser
@@ -84,7 +90,7 @@ export class UserRepository {
     public async delete(userId:string){
         const userDeleted = await this.prisma.user.delete({
             where:{
-                id:userId
+                id: userId
             }
         })
         return userDeleted

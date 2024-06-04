@@ -1,0 +1,40 @@
+@BaseURL=http://localhost:3000/api/orders
+@orderId=bfaae289-4a99-4424-882a-dd23e34fe1cc
+@productId=1a2d2010-36b5-41fd-85c4-25dd033f8738
+
+
+### Add A-an Item To an Order
+POST {{BaseURL}}/items HTTP/1.1
+Content-Type: application/json
+
+{
+    "orderId": "{{orderId}}",
+    "productId": "{{productId}}",
+    "observation": "",
+    "amount": 55
+}
+
+
+### Get All Order
+GET {{BaseURL}}/items HTTP/1.1
+
+### Get All Order
+GET {{BaseURL}}/{{orderId}}/items HTTP/1.1
+
+### Get All Order
+GET {{BaseURL}}/{{orderId}}/items/{{productId}} HTTP/1.1
+
+### Update a Order Unity
+PUT {{BaseURL}}/{{orderId}}/items/{{productId}} HTTP/1.1
+Content-Type: application/json
+
+{
+    "orderId": "{{orderId}}",
+    "productId": "{{productId}}",
+    "observation": "",
+    "amount": 0
+}
+
+
+### Delete a Order Unity
+DELETE {{BaseURL}}/{{orderId}}/items/{{productId}} HTTP/1.1

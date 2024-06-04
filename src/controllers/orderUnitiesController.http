@@ -1,0 +1,36 @@
+@BaseURL=http://localhost:3000/api
+@orderId=22e7c139-bed1-4957-a5ac-1ca2e431fd21
+@unitId=2da9fe9b-5eab-4d6c-8def-c219ea0c2c0e
+
+### Get All Order Unities
+GET {{BaseURL}}/orders/unities HTTP/1.1
+
+### Create Order Unities
+POST {{BaseURL}}/orders/unities HTTP/1.1
+Content-Type: application/json
+
+{
+  "orderId": "{{orderId}}",
+  "unitId": "{{unitId}}",
+  "type": "SUPPLIER"
+}
+
+### Get all Unities from a Order
+GET {{BaseURL}}/orders/{{orderId}}/unities HTTP/1.1
+
+### Get a Order Details
+GET {{BaseURL}}/orders/{{orderId}}/unities/{{unitId}} HTTP/1.1
+
+### Update a Order Unity
+PUT {{BaseURL}}/orders/{{orderId}}/unities/{{unitId}} HTTP/1.1
+Content-Type: application/json
+
+{
+    "orderId": "{{orderId}}",
+    "unitId": "{{unitId}}",
+    "type": "SUPPLIER"
+}
+
+
+### Delete a Order Unity
+DELETE {{BaseURL}}/orders/{{orderId}}/unities/{{unitId}} HTTP/1.1

@@ -9,7 +9,7 @@ export class ProductUseCase {
         const product = await this.productRepository.getByName(name)
 
         return product
-    }
+    } 
 
     async getById(productId: string) {
         const product = await this.productRepository.getById(productId)
@@ -26,7 +26,6 @@ export class ProductUseCase {
     async create(createProductParams: createProductParams) {
         const productByName = await this.productRepository.getByName(createProductParams.name)
 
-        //Verificações
         if(productByName != null) 
             throw new ProductNameIsBeingUsed(productByName.name)
 

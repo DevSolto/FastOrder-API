@@ -26,9 +26,6 @@ export class OrderUseCase {
     async updateById(orderId: string, updateOrderParams: updateOrderParams) {
         const orderExist = await this.orderRepository.getById(orderId)
 
-        if(orderExist == null)
-            throw new OrderNotFound()
-
         const order = await this.orderRepository.updateById(orderId, updateOrderParams)
 
         return order
@@ -36,9 +33,6 @@ export class OrderUseCase {
 
     async deleteById(orderId: string) {
         const orderExist = await this.orderRepository.getById(orderId)
-
-        if(orderExist == null)
-            throw new OrderNotFound()
 
         const order = await this.orderRepository.delete(orderId)
 

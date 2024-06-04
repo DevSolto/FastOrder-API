@@ -1,28 +1,80 @@
-import { WorkUseCase } from "../useCases/workUseCase"
+import { OrderItemsUseCase } from "../useCases/orderItemsUseCase" 
 import { Request, Response } from "express"
 import { RequestHttpResponse } from "../types"
-import { createWorkSchema,updateWorkSchema } from "../schemas/workSchemas"
+import { createOrderItemSchema, updateOrderItemSchema } from "../schemas/orderItemsSchema"
 import {z} from 'zod'
 
-export class WorkController {
-    workUseCase = new WorkUseCase()
+export class OrderItemsController {
+    orderItemUseCase = new OrderItemsUseCase()
 
-    async getAllWorks(req: Request, res: Response) {
+    async getById(req: Request, res: Response) {
+        const {orderId, productId} = req.params
+
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
             message: "Workers list"
         }
 
+        const isUuid = await  z.object({
+            orderId: z.string().uuid(),
+            productId: z.string().uuid(),
+        }).safeParseAsync({orderId, productId})
+
+        if(!isUuid.success){
+            httpResponse.status - 400
+            httpResponse.success = false
+            httpResponse.message = `The id is not valid.`
+            httpResponse.errors = isUuid.error.flatten().fieldErrors
+            
+            return res.status(httpResponse.status).json(httpResponse)
+        }
+
+        const orderIdValidated = isUuid.data.orderId
+        const productIdValidated = isUuid.data.productId
+
         try {
-            const works = await this.workUseCase.getAllWorks()
+            const order_items = await this.orderItemUseCase.getById(orderIdValidated, productIdValidated)
 
-            httpResponse.data = works
+            if(!order_items) {
+                httpResponse.status = 404
+                httpResponse.success = false
+                httpResponse.message =  'Order Not Found'
 
+                return res.status(httpResponse.status).json(httpResponse)
+            }
+
+            httpResponse.data = order_items
+            
             return res.status(httpResponse.status).json(httpResponse)
         } catch (error) {
-            console.error('Error fetching all works', error);
+            console.error('Error fetching Order by ID:', error);
+
+            httpResponse.status = 500
+            httpResponse.success = false
+            httpResponse.message = 'Internal server error'
             
+           return  res.status(httpResponse.status).json(httpResponse); 
+        }
+    }
+
+    async getAll(req: Request, res: Response) {
+        const httpResponse: RequestHttpResponse = {
+            status: 200,
+            success: true,
+            message: "Order list"
+        }
+
+        try {
+            const orders_items = await this.orderItemUseCase.getAll()
+
+            httpResponse.data = orders_items
+
+            return res.status(httpResponse.status).json(httpResponse)
+
+        } catch (error) {
+            console.error('Error fetching order items by ID:', error);
+
             httpResponse.status = 500
             httpResponse.success = false
             httpResponse.message = 'Internal server error'
@@ -32,29 +84,29 @@ export class WorkController {
     }
 
     async create(req: Request, res: Response) {
-        const request_body_validation = await createWorkSchema.safeParseAsync(req.body)
+        const request_body_validation = await createOrderItemSchema.safeParseAsync(req.body)
 
         const httpResponse: RequestHttpResponse = {
             status: 201,
             success: true,
-            message: "Successfully registred worker"
+            message: "Product added to order successfully"
         }
 
         if(!request_body_validation.success){
             httpResponse.status = 400
             httpResponse.success = false
-            httpResponse.message = "Unable to regiter worker, please check the values"
+            httpResponse.message = "Unable to create product upon request"
             httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
             
             return res.status(httpResponse.status).json(httpResponse)
         }
 
         try {
-            const work = await this.workUseCase.create(request_body_validation.data)
+            const order_items = await this.orderItemUseCase.create(request_body_validation.data)
 
             res.status(httpResponse.status).json(httpResponse)
         } catch (error) {
-            console.error('Error registring a work:', error);
+            console.error('Error creating a order items:', error);
             
             httpResponse.status = 500
             httpResponse.success = false
@@ -62,73 +114,21 @@ export class WorkController {
             
            return  res.status(httpResponse.status).json(httpResponse); 
         }
-
-    }
-
-    async getById(req: Request, res: Response) {
-        const {userId, unitId} = req.params
-
-        const httpResponse: RequestHttpResponse = {
-            status: 200,
-            success: true,
-            message: "Workers list"
-        }
-
-        const isUuid = await  z.object({
-            userId: z.string().uuid(),
-            unitId: z.string().uuid(),
-        }).safeParseAsync({userId, unitId})
-
-        if(!isUuid.success){
-            httpResponse.status - 400
-            httpResponse.success = false
-            httpResponse.message = `The id is not valid.`
-            httpResponse.errors = isUuid.error.flatten().fieldErrors
-            
-            return res.status(httpResponse.status).json(httpResponse)
-        }
-
-        const userIdValidated = isUuid.data.userId
-        const unitIdValidated = isUuid.data.unitId
-
-        try {
-            const work = await this.workUseCase.getById(userIdValidated, unitIdValidated)
-
-            if(!work) {
-                httpResponse.status = 404
-                httpResponse.success = false
-                httpResponse.message =  'Worker Not Found'
-
-                return res.status(httpResponse.status).json(httpResponse)
-            }
-
-            httpResponse.data = work
-            
-            return res.status(httpResponse.status).json(httpResponse)
-        } catch (error) {
-            console.error('Error fetching worker by ID:', error);
-
-            httpResponse.status = 500
-            httpResponse.success = false
-            httpResponse.message = 'Internal server error'
-            
-           return  res.status(httpResponse.status).json(httpResponse); 
-        }
-    }
+    } 
 
     async updateById(req: Request, res: Response) {
-        const {userId, unitId} = req.params
+        const {orderId, productId} = req.params
 
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Successfully worker update"
+            message: "Sucessfully order update"
         }
 
         const isUuid = await  z.object({
-            userId: z.string().uuid(),
-            unitId: z.string().uuid(),
-        }).safeParseAsync({userId, unitId})
+            orderId: z.string().uuid(),
+            productId: z.string().uuid(),
+        }).safeParseAsync({orderId, productId})
 
         if(!isUuid.success){
             httpResponse.status - 400
@@ -139,25 +139,24 @@ export class WorkController {
             return res.status(httpResponse.status).json(httpResponse)
         }
 
-        const request_body_validation = await updateWorkSchema.safeParseAsync(req.body)
+        const request_body_validation = await updateOrderItemSchema.safeParseAsync(req.body)
         
         if(!request_body_validation.success){
             httpResponse.status = 400
             httpResponse.success = false
-            httpResponse.message = "Unable to update worker, please check the values"
+            httpResponse.message = "Unable to update order, please check the values"
             httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
             
             return res.status(httpResponse.status).json(httpResponse)
         }
 
-        const userIdValidated = isUuid.data.userId
-        const unitIdValidated = isUuid.data.unitId 
+        const orderIdValidated = isUuid.data.orderId
+        const productIdValidated = isUuid.data.productId 
 
         try {
-            const workExist = await this.workUseCase.getById(userIdValidated,unitIdValidated)
+            const workExist = await this.orderItemUseCase.getById(orderIdValidated,productIdValidated)
 
-            if(!workExist) {//VERIFICA
-                httpResponse.status = 404
+            if(!workExist) {
                 httpResponse.success = false
                 httpResponse.message =  'work Not Found'
 
@@ -165,7 +164,7 @@ export class WorkController {
             }    
 
             
-            const work = await this.workUseCase.updateById(userIdValidated, unitIdValidated,request_body_validation.data)
+            const work = await this.orderItemUseCase.updateById(orderIdValidated, productIdValidated,request_body_validation.data)
             
             
             return res.status(httpResponse.status).json(httpResponse)
@@ -181,18 +180,18 @@ export class WorkController {
     }
 
     async deleteById(req: Request, res: Response) {
-        const {userId, unitId} = req.params
+        const {orderId, productId} = req.params
 
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Successfully worker deleted"
+            message: " Successfully deleted item"
         }
 
-        const isUuid = await z.object({
-            userId: z.string().uuid(),
-            unitId: z.string().uuid(),
-        }).safeParseAsync({userId, unitId})
+        const isUuid = await  z.object({
+            orderId: z.string().uuid(),
+            productId: z.string().uuid(),
+        }).safeParseAsync({orderId, productId})
 
         if(!isUuid.success){
             httpResponse.status - 400
@@ -203,8 +202,11 @@ export class WorkController {
             return res.status(httpResponse.status).json(httpResponse)
         }
 
+        const orderIdValidated = isUuid.data.orderId
+        const productIdValidated = isUuid.data.productId
+
         try {
-            const workExist = await this.workUseCase.getById(userId, unitId)
+            const workExist = await this.orderItemUseCase.getById(orderIdValidated, productIdValidated)
 
             if(!workExist) { 
                 httpResponse.status = 404
@@ -214,12 +216,14 @@ export class WorkController {
                 return res.status(httpResponse.status).json(httpResponse)
             }    
             
-            const work = await this.workUseCase.deleteById(userId, unitId)
+            const work = await this.orderItemUseCase.deleteById(orderIdValidated, productIdValidated)
 
 
             return res.status(httpResponse.status).json(httpResponse)
         } catch (error) {
-            console.error('Error deleting worker', error);
+            console.error('Error updating worker', error);
+
+            console.log(error);
 
             httpResponse.status = 500
             httpResponse.success = false
@@ -229,16 +233,16 @@ export class WorkController {
         }
     }
 
-    async getWorksByUserId(req: Request, res: Response){
-        const {userId} = req.params
+    async getItemsByOrderId(req: Request, res: Response){
+        const {orderId} = req.params
 
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Workers List From the User"
+            message: "Workers list"
         }
 
-        const isUuid = await z.string().uuid().safeParseAsync(userId)
+        const isUuid = await z.string().uuid().safeParseAsync(orderId)
 
         if(!isUuid.success){
             httpResponse.status - 400
@@ -250,9 +254,9 @@ export class WorkController {
         }
 
         try {
-            const user_works = await this.workUseCase.getWorksByUserId(isUuid.data)
+            const order_items = await this.orderItemUseCase.getItemsByOrderId(isUuid.data)
 
-            httpResponse.data = user_works
+            httpResponse.data = order_items
 
             return res.status(httpResponse.status).json(httpResponse); 
             

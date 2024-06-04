@@ -1,8 +1,8 @@
 import { ProductUseCase } from "../useCases/productUseCase"
 import { Request, Response } from "express"
-import validator from "validator"
 import { createProductSchema, updateProductSchema } from "../schemas/productSchemas"
 import { RequestHttpResponse } from "../types"
+import validator from "validator"
 
 export class ProductController {
     productUseCase = new ProductUseCase()
@@ -11,15 +11,15 @@ export class ProductController {
     //async getByName(req: Request, res: Response) {}
 
     async getById(req: Request, res: Response) {
-        const productId = req.params.id
+        const {productId} = req.params
 
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Lista de Produtos"
+            message: "Product list"
         }
 
-        const isUuid = validator.isUUID(productId) // Mudar Pro Zod????
+        const isUuid = validator.isUUID(productId) 
 
         if (!isUuid) {
             httpResponse.status - 400
@@ -32,7 +32,7 @@ export class ProductController {
         try {
             const product = await this.productUseCase.getById(productId)
 
-            if(!product) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
+            if(!product) {
                 httpResponse.status = 404
                 httpResponse.success = false
                 httpResponse.message =  'Product Not Found'
@@ -40,7 +40,9 @@ export class ProductController {
                 return res.status(httpResponse.status).json(httpResponse)
             }    
 
-           return res.status(httpResponse.status).json(product)
+            httpResponse.data = product
+
+            return res.status(httpResponse.status).json(httpResponse)
 
         } catch (error) {
             console.error('Error fetching product by ID:', error);
@@ -57,7 +59,7 @@ export class ProductController {
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Lista de Produtos"
+            message: "Product list"
         }
 
         /* Adicionar FIltro, Ordenação e Paginação */
@@ -84,15 +86,15 @@ export class ProductController {
         const request_body_validation = await createProductSchema.safeParseAsync(req.body)
 
         const httpResponse: RequestHttpResponse = {
-            status: 200,
+            status: 201,
             success: true,
-            message: "Produto Criado com Sucesso"
+            message: "Successfully created product"
         }
 
         if(!request_body_validation.success){
             httpResponse.status = 400
             httpResponse.success = false
-            httpResponse.message = "Não foi possivel criar o produto, verifique os valores dos campos"
+            httpResponse.message = "Product coud not be created, please check the values"
             httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
             
             return res.status(httpResponse.status).json(httpResponse)
@@ -101,7 +103,7 @@ export class ProductController {
         try {
             const product = await this.productUseCase.create(request_body_validation.data)
 
-            res.status(201).json(product)
+            res.status(httpResponse.status).json(httpResponse)
         } catch (error) {
             console.error('Error creating a product:', error);
             
@@ -114,17 +116,16 @@ export class ProductController {
     }
 
     async updateById(req: Request, res: Response) {
-        const productId = req.params.id
+        const {productId} = req.params
 
         const httpResponse: RequestHttpResponse = {
             status: 200,
             success: true,
-            message: "Produto Atualizado com Sucesso"
+            message: "Product updated successfully"
         }
 
-        const isUuid = validator.isUUID(productId) // Mudar Pro Zod????
-        const request_body_validation = await updateProductSchema.safeParseAsync(req.body)
-
+        const isUuid = validator.isUUID(productId)
+        
         if (!isUuid) {
             httpResponse.status = 400
             httpResponse.success = false
@@ -133,10 +134,12 @@ export class ProductController {
             return res.status(httpResponse.status).json(httpResponse)
         }
 
+        const request_body_validation = await updateProductSchema.safeParseAsync(req.body)
+
         if(!request_body_validation.success){
             httpResponse.status = 400
             httpResponse.success = false
-            httpResponse.message = "Não foi possivel atualizar o produto, verifique os valores dos campos"
+            httpResponse.message = "Unable to update the product, please check the field values"
             httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
             
             return res.status(httpResponse.status).json(httpResponse)
@@ -144,7 +147,7 @@ export class ProductController {
         try {
             const productExist = await this.productUseCase.getById(productId)
 
-            if(!productExist) { // verificação necessaria ??? PooductUseCase lança um Erro se N encontrar um produto - VERIFICA
+            if(!productExist) { 
                 httpResponse.status = 404
                 httpResponse.success = false
                 httpResponse.message =  'Product Not Found'
@@ -168,7 +171,7 @@ export class ProductController {
     }
     
     async deleteById(req: Request, res: Response) {
-        const productId = req.params.id
+        const {productId} = req.params
         
         const httpResponse: RequestHttpResponse = {
             status: 200,
@@ -176,7 +179,7 @@ export class ProductController {
             message: 'Product Deleted Succefully'
         }
 
-        const isUuid = validator.isUUID(productId) // Mudar Pro Zod????
+        const isUuid = validator.isUUID(productId)
 
         if (!isUuid) {
             httpResponse.status = 400
