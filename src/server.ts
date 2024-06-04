@@ -9,9 +9,6 @@ import orderItemsRoutes from './routes/orderItems'
 import orderUnitiesRoutes from './routes/orderUnitiesRoutes'
 import authRoutes from "./routes/authRoutes"
 import cors from "cors"
-import { isAuthenticated } from './middlewares/auth';
-
-import cors from 'cors'
 
 const app = express()
 
