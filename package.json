@@ -1,13 +1,13 @@
 {
-  "name": "back-end",
+  "name": "FastOrderApi",
   "version": "1.0.0",
   "description": "<h1 align=\"center\">Fast Order </h1>\r <h4 align=\"center\"> \r \t🚧  🚀 Em construção...  🚧\r </h4>\r <p align=\"center\">Este projeto é um sistema de gerenciamento de pedidos projetado para facilitar as transações entre unidades de fornecimento e unidades de venda em uma empresa. Utilizando tecnologias modernas como Node.js, TypeScript, e Prisma, este sistema permite operações eficientes e seguras de pedidos, melhorando a logística interna.</p>",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec ts-node src/server.ts",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "start": "node dist/server.js",
-    "prisma": "prisma generate"
+    "dev": "ts-node-dev src/server.ts",
+    "seed": "ts-node prisma/seeds/seeds.ts"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +23,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@prisma/client": "5.14.0",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
@@ -30,6 +31,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "gerador-validador-cpf": "^5.0.2",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "prisma": "^5.14.0",

@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { ProductUseCase } from '../useCases/productUseCase'
-import { UserUseCase } from '../useCases/userUseCase'
 
 const productUseCase = new ProductUseCase()
 

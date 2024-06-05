@@ -1,27 +1,26 @@
-import { Router } from 'express'
+import { Request, Response, Router } from 'express'
 import { UserController } from '../controllers/userController'
-import { is } from "../middlewares/auth"
 
 const router = Router()
 const userController = new UserController()
 
-router.get('/:userId', async (req, res) => {
+router.get('/:userId', async (req: Request, res: Response) => {
   return await userController.getById(req, res)
 });
 
-router.get('', async (req, res) => {
+router.get('', async (req: Request, res: Response) => {
   return await userController.getAll(res)
 })
 
-router.post('', async (req, res) => {
+router.post('', async (req: Request, res: Response) => {
   return await userController.create(req, res)
 })
 
-router.put('/:userId', async (req, res) => {
+router.put('/:userId', async (req: Request, res: Response) => {
   return await userController.update(req, res)
 })
 
-router.delete('/:userId', async (req, res) => {
+router.delete('/:userId', async (req: Request, res: Response) => {
   return await userController.delete(req, res)
 })
 
