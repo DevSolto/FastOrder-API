@@ -38,4 +38,53 @@ export class OrderUseCase {
 
         return order
     }
+
+    async amountOrderByStatus() {
+        const amount_order = await this.orderRepository.amountOrderByStatus()
+
+        return amount_order
+    }
+
+    async amountOfOrderByType() {
+        const amount_order = await this.orderRepository.amountOfOrderByType()
+
+        return amount_order
+    }
+
+    async pendingOrdersCountsByUnities() {
+        const amount_order = await this.orderRepository.pendingOrdersCountsByUnities()
+
+        return amount_order
+    }
+
+    async averagetimeOfProcess() {
+        const time_proccess = await this.orderRepository.averagetimeOfProcess()
+
+        return time_proccess
+    }
+
+    async error_rate_percentage() {
+        const error_rate = await this.orderRepository.error_rate_percentage()
+
+        return error_rate
+    }
+
+    async late_rate_percentage() {
+        const late_rate = await this.orderRepository.late_rate_percentage()
+
+        return late_rate
+    }
+
+    async daily_order_rate() {
+        const daily_rate = await this.orderRepository.daily_order_rate()
+
+        return daily_rate
+    }
+
+    async average_per_day() {
+        const average_per_day = await this.orderRepository.average_per_day()
+
+        return average_per_day
+    }
+
 }

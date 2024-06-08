@@ -38,12 +38,14 @@ export type UserJWTPayload = {
 export type createProductParams = {
     name: string,
     description: string,
+    image?: string,
     type: Type,
 }
 
 export type updateProductParams = {
     name?: string,
     description?: string,
+    image?: string,
     type?: Type,
 }
 

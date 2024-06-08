@@ -14,7 +14,8 @@ const error_messages = {
     },
     unique_name: "Product name already in use",
     max_length: "Maximun number of characters exceeded",
-    type_invalid: `Invalid product type, choose a valid type: ${types.toString()}`
+    type_invalid: `Invalid product type, choose a valid type: ${types.toString()}`,
+    url_invalid: "Url invalid format"
 }
 
 /* Schema de Validação para o campo Name de Produto */
@@ -46,17 +47,26 @@ const productTypeSchema = z.enum(types, {
     /* Personalizar as mensagens */
 })
 
+const productImageSchema = z
+    .string({
+        required_error: error_messages.required_field_in_json,
+        invalid_type_error: error_messages.type.string
+    })
+    .url(error_messages.url_invalid)
+
 
 /* Schema de validação para a criação de um Produto */
 export const createProductSchema = z.object({
     name: productNameSchema,
     description: productDescriptionSchema,
-    type: productTypeSchema
+    type: productTypeSchema,
+    image: productImageSchema.optional()
 })
 
 /* Schema de validação para o atualização de Produto */
 export const updateProductSchema = z.object({
     name: productNameSchema.optional(),
     description: productDescriptionSchema.optional(),
-    type: productTypeSchema.optional()
+    type: productTypeSchema.optional(),
+    image: productImageSchema.optional()
 })
