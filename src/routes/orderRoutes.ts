@@ -7,39 +7,39 @@ const orderController = new OrderController()
 
 
 router.get("/status-count", async (req, res) => {
-    return await orderControler.amountOrderByStatus(req, res)
+    return await orderController.amountOrderByStatus(req, res)
 })
 
 router.get("/type-count", async (req, res) => {
-    return await orderControler.amountOfOrderByType(req, res)
+    return await orderController.amountOfOrderByType(req, res)
 })
 
 router.get("/pending-count", async (req, res) => {
-    return await orderControler.pendingOrdersCountsByUnities(req, res)
+    return await orderController.pendingOrdersCountsByUnities(req, res)
 })
 
 router.get("/average-processing-time", async (req, res) => {
-    return await orderControler.averagetimeOfProcess(req, res)
+    return await orderController.averagetimeOfProcess(req, res)
 })
 
 router.get("/average-per-day", async (req, res) => {
-    return await orderControler.average_per_day(req, res)
+    return await orderController.average_per_day(req, res)
 })
 
 router.get("/error-rate", async (req, res) => {
-    return await orderControler.error_rate_percentage(req, res)
+    return await orderController.error_rate_percentage(req, res)
 })
 
 router.get("/delay-rate", async (req, res) => {
-    return await orderControler.late_rate_percentage(req, res)
+    return await orderController.late_rate_percentage(req, res)
 })
 
 router.get("/daily-average", async (req, res) => {
-    return await orderControler.daily_order_rate(req, res)
+    return await orderController.daily_order_rate(req, res)
 })
 
 router.get("", async (req, res) => {
-    return await orderControler.getAll(req, res)
+    return await orderController.getAll(req, res)
 
 })
 
@@ -57,7 +57,7 @@ router.put("/:orderId", async (req: Request, res: Response) => {
 
 
 router.delete("/:orderId", async (req, res) => {
-    return await orderControler.deleteById(req, res)
+    return await orderController.deleteById(req, res)
 
 })
 
