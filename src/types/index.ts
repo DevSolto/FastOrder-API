@@ -81,7 +81,7 @@ export type updateWorksParams = {
 export type createOrderParams = {
     creationDate?: Date,
     receivedDate: Date,
-    status?: Status,
+    status: Status,
     deliveryEstimate: Date,
     userId: string
 }

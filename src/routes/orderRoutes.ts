@@ -1,9 +1,10 @@
 
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import { OrderController } from "../controllers/orderController"
 
 const router = Router()
-const orderControler = new OrderController()
+const orderController = new OrderController()
+
 
 router.get("/status-count", async (req, res) => {
     return await orderControler.amountOrderByStatus(req, res)
@@ -39,22 +40,25 @@ router.get("/daily-average", async (req, res) => {
 
 router.get("", async (req, res) => {
     return await orderControler.getAll(req, res)
+
 })
 
-router.post("", async (req, res) => {
-    return await orderControler.create(req, res)
+router.post("", async (req: Request, res: Response) => {
+    return await orderController.create(req, res)
 })
 
-router.get("/:orderId", async (req, res) => {
-    return await orderControler.getById(req, res)
+router.get("/:orderId", async (req: Request, res: Response) => {
+    return await orderController.getById(req, res)
 })
 
-router.put("/:orderId", async (req, res) => {
-    return await orderControler.updateById(req, res)
+router.put("/:orderId", async (req: Request, res: Response) => {
+    return await orderController.updateById(req, res)
 })
+
 
 router.delete("/:orderId", async (req, res) => {
     return await orderControler.deleteById(req, res)
+
 })
 
 export default router

@@ -1,10 +1,9 @@
 
-import { UnitUseCase } from "../useCases/unitUseCase";
-import { createUnitParams } from "../types";
-import { Request, Response } from "express"
 import validator from "validator"
 import { RequestHttpResponse } from "../types"
-import { createUnitSchema, updateUnitSchema } from "../schemas/unitSchemas";
+import { UnitUseCase } from "../useCases/unitUseCase"
+import { Request, Response } from "express"
+import { createUnitSchema, updateUnitSchema } from "../schemas/unitSchemas"
 
 export class UnitController {
     unitUseCase = new UnitUseCase()
