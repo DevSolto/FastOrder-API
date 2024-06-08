@@ -36,3 +36,28 @@ Content-Type: application/json
 
 ### Delete a Order Unity
 DELETE {{BaseURL}}/{{orderId}} HTTP/1.1
+
+
+### Orders By Status
+GET {{BaseURL}}/status-count 
+
+### Orders By Type
+GET {{BaseURL}}/type-count  
+
+### Pending Orders Count
+GET {{BaseURL}}/pending-count
+
+### Processing time
+GET {{BaseURL}}/average-processing-time
+
+### Error rate
+GET {{BaseURL}}/error-rate 
+
+### Delay
+GET {{BaseURL}}/delay-rate 
+
+### Average per day
+GET {{BaseURL}}/daily-average
+
+### Average per day
+GET {{BaseURL}}/average-per-day 

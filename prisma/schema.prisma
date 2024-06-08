@@ -36,6 +36,7 @@ model Product {
   id          String       @id @default(uuid())
   name        String       @unique @db.VarChar(50)
   description String
+  image       String? 
   type        Type
   OrderItems  OrderItems[]
   order       Order[]      @relation("OrderToProduct")
