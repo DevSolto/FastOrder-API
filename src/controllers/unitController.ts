@@ -96,15 +96,18 @@ export class UnitController {
             httpResponse.message = "Unable to create unit, please check values"
             httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
             
+            console.log(httpResponse);
             return res.status(httpResponse.status).json(httpResponse)
         }
+        
+        console.log(httpResponse);
 
         try {
             const unit = await this.unitUseCase.create(request_body_validation.data)
-
+            
             res.status(201).json(unit)
         } catch (error) {
-            console.error('Error creating a unit:', error);
+            console.log('Error creating a unit:', error);
             
             httpResponse.status = 500
             httpResponse.success = false
