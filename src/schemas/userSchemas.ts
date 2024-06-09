@@ -19,7 +19,8 @@ const error_messages = {
     cpf_in_use: "CPF lready in use",
     phone_format: "Invalid phone number format",
     phone_in_use: "previously used phone number",
-    role_invalid: `Invalid role, choose a valid role: ${roles.toString()}`
+    role_invalid: `Invalid role, choose a valid role: ${roles.toString()}`,
+    url_invalid: "Invalid URL format"
 }
 
 
@@ -39,8 +40,8 @@ const emailSchema = z
         required_error: error_messages.required_field_in_json,
         invalid_type_error: error_messages.type.string
     })
-    .email({message: error_messages.email_format})
-    .min(1, error_messages.empty_field) 
+    .email({ message: error_messages.email_format })
+    .min(1, error_messages.empty_field)
     .max(100, error_messages.max_length)
     .refine(async email => {
         const user = await userUseCase.getByEmail(email)
@@ -63,8 +64,8 @@ const cpfSchema = z
         required_error: error_messages.required_field_in_json,
         invalid_type_error: error_messages.type.string
     })
-    .min(11, "")
-    .max(11)
+    .min(11, "CPF must have 11 digits")
+    .max(11, "CPF must have 11 digits")
     .refine(async cpf => {
         const user = await userUseCase.getByCpf(cpf)
 
@@ -81,7 +82,7 @@ const phoneSchema = z
         return user ? false : true
     }, error_messages.phone_in_use)
 
-const roleSchema = z.enum(roles, {message: error_messages.role_invalid})
+const roleSchema = z.enum(roles, { message: error_messages.role_invalid })
 
 export const createUserSchema = z.object({
     name: nameSchema,
@@ -89,7 +90,7 @@ export const createUserSchema = z.object({
     password: passwordSchema,
     cpf: cpfSchema,
     phone: phoneSchema,
-    role: roleSchema
+    role: roleSchema,
 })
 
 export const updateUserSchema = z.object({
@@ -98,5 +99,5 @@ export const updateUserSchema = z.object({
     password: passwordSchema.optional(),
     cpf: cpfSchema.optional(),
     phone: phoneSchema.optional(),
-    role: roleSchema.optional()
+    role: roleSchema.optional(),
 })

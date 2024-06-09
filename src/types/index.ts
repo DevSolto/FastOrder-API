@@ -14,6 +14,7 @@ export type createUserParams = {
     email: string,
     password: string,
     phone: string,
+    image?: string,
     role: Role
 }
 
@@ -23,6 +24,7 @@ export type updateUserParams = {
     email?: string,
     password?: string,
     phone?: string,
+    image?: string,
     role?: Role 
 }
 

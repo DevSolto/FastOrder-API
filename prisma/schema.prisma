@@ -5,7 +5,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  }
+}
 
 model User {
   id       String  @id @default(uuid())
@@ -15,6 +15,7 @@ model User {
   password String  @db.Char(60)
   phone    String  @unique @db.VarChar(20)
   role     Role
+  image    String?
   orders   Order[]
   Works    Works[]
 }
@@ -36,8 +37,8 @@ model Product {
   id          String       @id @default(uuid())
   name        String       @unique @db.VarChar(50)
   description String
-  image       String? 
   type        Type
+  image       String?
   OrderItems  OrderItems[]
   order       Order[]      @relation("OrderToProduct")
 }
