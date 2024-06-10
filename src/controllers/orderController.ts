@@ -98,7 +98,10 @@ export class OrderController {
         try {
             const order = await this.orderUseCase.create(request_body_validation.data)
 
-            res.status(httpResponse.status).json(httpResponse)
+            res.status(httpResponse.status).json({
+                data:order,
+                ...httpResponse
+            })
         } catch (error) {
             console.error('Error creating a order:', error);
 

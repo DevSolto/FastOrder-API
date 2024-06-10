@@ -129,13 +129,13 @@ export class OrdersUnitiesController {
         const httpResponse: RequestHttpResponse = {
             status: 201,
             success: true,
-            message: "Trabalhador Registrado com Sucesso"
+            message: "Registrado com Sucesso"
         }
 
         if(!request_body_validation.success){
             httpResponse.status = 400
             httpResponse.success = false
-            httpResponse.message = "Não foi possivel registrar o pedido da unidade"
+            httpResponse.message = "Não foi possível registrar"
             httpResponse.errors = request_body_validation.error.formErrors.fieldErrors
             
             return res.status(httpResponse.status).json(httpResponse)
