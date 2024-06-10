@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express'
 import { UserController } from '../controllers/userController'
+import { profile_image_upload } from '../config/multer'
 
 const router = Router()
 const userController = new UserController()
@@ -12,11 +13,11 @@ router.get('', async (req: Request, res: Response) => {
   return await userController.getAll(res)
 })
 
-router.post('', async (req: Request, res: Response) => {
+router.post('', profile_image_upload.single("profile_image"), async (req: Request, res: Response) => {
   return await userController.create(req, res)
 })
 
-router.put('/:userId', async (req: Request, res: Response) => {
+router.put('/:userId', profile_image_upload.single("profile_image"), async (req: Request, res: Response) => {
   return await userController.update(req, res)
 })
 

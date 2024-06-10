@@ -1,22 +1,43 @@
 @BaseURL=http://localhost:3000/api
-@userId=4135a788-5217-4447-a2e4-f80ca659e0cd
-
+@userId=061e305b-9ed9-4aa8-aca5-b2f39a6eaa07
 ### Create a User
-POST {{BaseURL}}/users
-Content-Type: application/json
+POST {{BaseURL}}/users 
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
-{
-    "name": "Luana",
-    "email": "lua@vini.com",
-    "password": "987654321",
-    "cpf": "1198745632",
-    "phone": "11965231458",
-    "role":"SELLER"  
-}
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+
+Luana
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="email"
+
+lua@vini.com
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="password"
+
+987654321
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="cpf"
+
+11987454632
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="phone"
+
+11965231458
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="role"
+
+SELLER
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="profile_image"; filename="velho.jpg"
+Content-Type: image/png
+
+< ./velho.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 
 ### Get All Users
-GET {{BaseURL}}/users
+GET {{BaseURL}}/users 
 
 
 ### Get a User Details By ID
@@ -25,13 +46,18 @@ GET {{BaseURL}}/users/{{userId}}
 
 ### Update a User
 PUT {{BaseURL}}/users/{{userId}}
-Content-Type: application/json
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
-{
-    "email": "nero@vini.com",
-    "cpf": "98745632125",
-    "phone": "11952365471"
-}
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+
+Luana Ruiva
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="profile_image"; filename="velho.jpg"
+Content-Type: image/png
+
+< ./Luana.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ### Delete a User
 DELETE {{BaseURL}}/users/{{userId}}

@@ -13,16 +13,16 @@ export class UserRepository {
             },
             include: {
                 _count: true,
-               orders: {
-                include: {
-                    _count: true,
+                orders: {
+                    include: {
+                        _count: true,
+                    }
+                },
+                Works: {
+                    include: {
+                        Unit: true
+                    }
                 }
-               },
-               Works: {
-                include: {
-                    Unit: true
-                }
-               } 
             }
         });
         return user; // Retorna o usuário encontrado ou null
@@ -62,7 +62,7 @@ export class UserRepository {
         return user; // Retorna o usuário criado
     }
 
-    public async getAll(){
+    public async getAll() {
         const users = await this.prisma.user.findMany({
             include: {
                 Works: {
@@ -76,20 +76,20 @@ export class UserRepository {
         return users
     }
 
-    public async update(idUser:string, updateUserParams: updateUserParams){
+    public async update(idUser: string, updateUserParams: updateUserParams) {
         const userUpdated = await this.prisma.user.update({
-            where:{
-                id:idUser
+            where: {
+                id: idUser
             },
-            data:updateUserParams
+            data: updateUserParams
         })
 
         return userUpdated
     }
-    
-    public async delete(userId:string){
+
+    public async delete(userId: string) {
         const userDeleted = await this.prisma.user.delete({
-            where:{
+            where: {
                 id: userId
             }
         })
